@@ -3,12 +3,15 @@ import { CustomerInfo } from "../types";
 
 interface Customer {
   list: CustomerInfo[],
-  getCustomerList: (this: _NoLifecycle<any>, vnode: Vnode<any, _NoLifecycle<any>>) => void
+  getCustomerList: () => Promise<void>
 };
 
 export const Customers: Customer = {
   list: [],
-  getCustomerList: function(this: _NoLifecycle<any>, vnode: Vnode<any, _NoLifecycle<any>>): void {
-    Customers.list = window.electronAPI.getCustomerList();
+  getCustomerList: async (): Promise<void> => {
+    const data = await window.electronAPI.getCustomerList();
+    // console.log(Customers.list)
+    Customers.list = data;
+    // console.log(Customers.list)
   }
 };

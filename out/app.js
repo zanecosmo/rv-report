@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -7,11 +16,11 @@ exports.extractForm = exports.database = void 0;
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const electron_1 = require("electron");
-const uuidjs_1 = require("uuidjs");
-const uuid = uuidjs_1.UUID.generate();
+// import { UUID } from "uuidjs";
+// const uuid: string = UUID.generate();
 exports.database = {
     grabLineItems: () => fs_1.default.readFileSync("./db/line-items.txt").toString(),
-    grabCustomerInfo: () => JSON.parse(fs_1.default.readFileSync("customer-info.json").toString()),
+    grabCustomerInfo: () => JSON.parse(fs_1.default.readFileSync("./db/customer-info.json").toString()),
     updateCustomerInfo: (customerInfo) => {
         fs_1.default.writeFileSync("customer-info.json", JSON.stringify(customerInfo));
     }
@@ -66,6 +75,9 @@ const createWindow = () => {
     electron_1.ipcMain.handle("generic-event", (_event, type) => {
         return (0, exports.extractForm)(exports.database.grabLineItems(), type);
     });
+    electron_1.ipcMain.handle("get-customer-list", (_event) => __awaiter(void 0, void 0, void 0, function* () {
+        return exports.database.grabCustomerInfo();
+    }));
     mainWindow.loadFile('../public/index.html');
 };
 electron_1.app.on("ready", () => createWindow());

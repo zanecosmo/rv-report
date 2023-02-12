@@ -3,13 +3,13 @@ import { FormCategory, FormRow } from "./types";
 import FS from "fs";
 import { CustomerInfo } from "./types";
 import { app, BrowserWindow, ipcMain, IpcMainInvokeEvent } from "electron";
-import { UUID } from "uuidjs";
+// import { UUID } from "uuidjs";
 
-const uuid: string = UUID.generate();
+// const uuid: string = UUID.generate();
 
 export const database = {
   grabLineItems: () => FS.readFileSync("./db/line-items.txt").toString(),
-  grabCustomerInfo: () => JSON.parse(FS.readFileSync("customer-info.json").toString()),
+  grabCustomerInfo: (): CustomerInfo[] => JSON.parse(FS.readFileSync("./db/customer-info.json").toString()),
   updateCustomerInfo: (customerInfo: CustomerInfo) => {
     FS.writeFileSync("customer-info.json", JSON.stringify(customerInfo));
   }
@@ -75,6 +75,10 @@ const createWindow = () => {
 
   ipcMain.handle("generic-event", (_event: IpcMainInvokeEvent, type: string) => {
     return extractForm(database.grabLineItems(), type);
+  });
+
+  ipcMain.handle("get-customer-list", async (_event: IpcMainInvokeEvent): Promise<CustomerInfo[]> => {
+    return database.grabCustomerInfo();
   });
 
   mainWindow.loadFile('../public/index.html')

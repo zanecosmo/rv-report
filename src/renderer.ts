@@ -3,7 +3,7 @@ import m from "mithril";
 import { CustomersView } from "./views/customer-view";
 
 const mithrilElement: Element | null = document.querySelector(".mithril-test");
-if (mithrilElement)  m.mount(mithrilElement, CustomersView);
+if (mithrilElement) m.mount(mithrilElement, CustomersView);
 
 const tbody = document.querySelector("tbody");
 
