@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.extractForm = exports.database = void 0;
 const fs_1 = __importDefault(require("fs"));
 exports.database = {
-    grabLineItems: () => fs_1.default.readFileSync("line-items.txt").toString(),
+    grabLineItems: () => fs_1.default.readFileSync("./db/line-items.txt").toString(),
     grabCustomerInfo: () => JSON.parse(fs_1.default.readFileSync("customer-info.json").toString()),
     updateCustomerInfo: (customerInfo) => {
         fs_1.default.writeFileSync("customer-info.json", JSON.stringify(customerInfo));

@@ -3,7 +3,7 @@ import FS from "fs";
 import { CustomerInfo } from "./types";
 
 export const database = {
-  grabLineItems: () => FS.readFileSync("line-items.txt").toString(),
+  grabLineItems: () => FS.readFileSync("./db/line-items.txt").toString(),
   grabCustomerInfo: () => JSON.parse(FS.readFileSync("customer-info.json").toString()),
   updateCustomerInfo: (customerInfo: CustomerInfo) => {
     FS.writeFileSync("customer-info.json", JSON.stringify(customerInfo));

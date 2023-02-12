@@ -2,5 +2,5 @@
   "watch": ["./"],
   "ignore": ["build"],
   "ext": ".ts",
-  "exec": "tsc && electron ./out/app.js"
+  "exec": "tsc && webpack --config webpack.config.js && electron ./out/app.js"
 }

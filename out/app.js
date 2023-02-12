@@ -8,7 +8,7 @@ const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const electron_1 = require("electron");
 exports.database = {
-    grabLineItems: () => fs_1.default.readFileSync("line-items.txt").toString(),
+    grabLineItems: () => fs_1.default.readFileSync("./db/line-items.txt").toString(),
     grabCustomerInfo: () => JSON.parse(fs_1.default.readFileSync("customer-info.json").toString()),
     updateCustomerInfo: (customerInfo) => {
         fs_1.default.writeFileSync("customer-info.json", JSON.stringify(customerInfo));

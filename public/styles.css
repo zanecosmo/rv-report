@@ -1,0 +1,133 @@
+
+@font-face {
+  font-family: "Consolas";
+  src: url("./fonts/CONSOLA.TTF");
+}
+
+* {
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+}
+
+:root {
+  --form-width: 800px;
+}
+
+body {
+  padding-left: calc(50vw - var(--form-width) / 2);
+}
+
+h2 {
+  margin: 16px 0px 16px 0px;
+}
+
+h3 {
+  margin: 16px 0px 8px 0px;
+}
+
+hr {
+  width: var(--form-width);
+  border: none;
+  border-top: 2px dotted black;
+  margin-bottom: 16px;
+}
+
+section {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+label {
+  font-size: .8em;
+}
+
+input {
+  padding: 4px;
+  width: 400px;
+  outline: none;
+  margin-bottom: 16px;
+}
+
+table {
+  border-collapse: collapse;
+  max-width: 800px;
+}
+
+.spacer {
+  height: 16px;
+  border: none;
+}
+
+.pass-fail {
+  width: 80px;
+}
+
+.checkbox, .checkbox input, .checkbox .overlay {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  width: 100%;
+}
+
+.icon-container {
+  position: absolute;
+  top: calc(50% - 9px);
+  left: calc(50% - 9px);
+  height: 18px;
+  width: 18px;
+}
+
+.icon {
+  position: absolute;
+  top: 4px;
+  left: 2px;
+  transform: rotate(-50deg);
+  height: 6px;
+  width: 12px;
+  border-bottom: 3.5px solid black;
+  border-left: 3.5px solid black;
+}
+
+.checkbox input {
+  position: absolute;
+  opacity: 0;
+}
+
+.checkbox input:checked ~ .overlay {
+  opacity: 1;
+}
+
+.checkbox .overlay {
+  background-color: transparent;
+  opacity: 0;
+  cursor: pointer;
+}
+
+th {
+  text-align: start;
+}
+
+.line-item-notes {
+  width: 200px;
+  max-width: 200px;
+}
+
+.category-notes {
+  width: 800px;
+  max-width: 800px;
+}
+
+.textarea-div {
+  width: 100%;
+  overflow-wrap: break-word;
+  border: none;
+  outline: none;
+}
+
+th, td {
+  padding: 4px;
+  position: relative;
+  border: 1px solid black;
+}
