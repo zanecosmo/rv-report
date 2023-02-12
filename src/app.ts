@@ -3,6 +3,9 @@ import { FormCategory, FormRow } from "./types";
 import FS from "fs";
 import { CustomerInfo } from "./types";
 import { app, BrowserWindow, ipcMain, IpcMainInvokeEvent } from "electron";
+import { UUID } from "uuidjs";
+
+const uuid: string = UUID.generate();
 
 export const database = {
   grabLineItems: () => FS.readFileSync("./db/line-items.txt").toString(),

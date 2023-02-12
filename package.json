@@ -20,11 +20,16 @@
   "homepage": "https://github.com/zanecosmo/rv-report-new#readme",
   "devDependencies": {
     "@types/electron": "^1.6.10",
+    "@types/mithril": "^2.0.12",
     "electron": "^23.0.0",
     "nodemon": "^2.0.20",
     "ts-loader": "^9.4.2",
     "typescript": "^4.9.5",
     "webpack": "^5.75.0",
     "webpack-cli": "^5.0.1"
+  },
+  "dependencies": {
+    "mithril": "^2.2.2",
+    "uuidjs": "^5.0.0"
   }
 }

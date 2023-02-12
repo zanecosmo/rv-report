@@ -1,4 +1,9 @@
 import { FormCategory, FormRow } from "./types";
+import m from "mithril";
+import { CustomersView } from "./views/customer-view";
+
+const mithrilElement: Element | null = document.querySelector(".mithril-test");
+if (mithrilElement)  m.mount(mithrilElement, CustomersView);
 
 const tbody = document.querySelector("tbody");
 
@@ -63,7 +68,7 @@ const createCategory = (category: FormCategory): string => {
   return "".concat(spacer, categoryName, rows, categoryNotes);
 };
 
-(async () => {
+const buildForm = async () => {
   console.log("HERE");
   const data = await window.electronAPI.getTableRow("towable");
   console.log(data);
@@ -76,4 +81,6 @@ const createCategory = (category: FormCategory): string => {
   });
 
   if (tbody) tbody.innerHTML = reportForm;
-})();
+};
+
+// buildForm();

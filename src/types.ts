@@ -1,5 +1,7 @@
 export interface CustomerInfo {
-  name: string,
+  id: null | string,
+  firstName: string,
+  lastName: string,
   address: string,
   phone: string,
   email: string
@@ -25,7 +27,8 @@ export interface Report {
 }
 
 export interface IElectronAPI {
-  getTableRow: (type: string) => FormCategory[]
+  getTableRow: (type: string) => FormCategory[],
+  getCustomerList: () => CustomerInfo[],
 };
 
 declare global {

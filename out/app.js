@@ -7,6 +7,8 @@ exports.extractForm = exports.database = void 0;
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const electron_1 = require("electron");
+const uuidjs_1 = require("uuidjs");
+const uuid = uuidjs_1.UUID.generate();
 exports.database = {
     grabLineItems: () => fs_1.default.readFileSync("./db/line-items.txt").toString(),
     grabCustomerInfo: () => JSON.parse(fs_1.default.readFileSync("customer-info.json").toString()),

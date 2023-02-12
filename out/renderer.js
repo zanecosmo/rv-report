@@ -8,7 +8,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const mithril_1 = __importDefault(require("mithril"));
+const customer_view_1 = require("./views/customer-view");
+const mithrilElement = document.querySelector(".mithril-test");
+if (mithrilElement)
+    mithril_1.default.mount(mithrilElement, customer_view_1.CustomersView);
 const tbody = document.querySelector("tbody");
 const createCategory = (category) => {
     const spacer = `
@@ -65,7 +73,7 @@ const createCategory = (category) => {
     });
     return "".concat(spacer, categoryName, rows, categoryNotes);
 };
-(() => __awaiter(void 0, void 0, void 0, function* () {
+const buildForm = () => __awaiter(void 0, void 0, void 0, function* () {
     console.log("HERE");
     const data = yield window.electronAPI.getTableRow("towable");
     console.log(data);
@@ -75,4 +83,5 @@ const createCategory = (category) => {
     });
     if (tbody)
         tbody.innerHTML = reportForm;
-}))();
+});
+// buildForm();
