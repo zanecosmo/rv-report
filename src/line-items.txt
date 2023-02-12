@@ -1,0 +1,321 @@
+Appearance
+Walk around, look for any obvious defects or scratches.
+Paint - chips, over-spray, gel coat peeling
+Chrome and molding conditions
+
+Roof
+Ladder - Check attachment points for cracks or looseness
+
+TV, CB and Radio Antennas
+Fan, vents, and covers (Check for cracks and seals)
+A/C units, covers, sealant, and drainage
+Lights
+Skylight(s)
+Solar Panel - Check mount, wires, controllers, etc.
+Plumbing vents
+Seams - Check caulking around edges and end caps
+
+Windows
+Alignment, operation, latches
+Seals/gaskets/tint
+Cracks - Check for chips in glass and double pane glass seal
+Emergency EXIT Window operation
+
+Awnings
+Operate Open and Close
+Check springs, hardware, support struts,
+locks
+Inspect material
+
+Entry Door
+Alignment, operation, weather stripping
+Latch, lock, deadbolt, and remote lock open/close
+Screen Door condition and latch
+Step operation and storage
+
+Storage Compartments
+Door alignments and weather stripping
+Locks - latch, open, lock
+Lights - on/off
+Hinges - Gas cylinders, gaskets, seals
+Handles
+Check for signs of leaking or water damage
+
+Generator
+Light - Hinges - Struts
+Door alignment - release handle - lock
+General condition
+Generator Hours
+Make and Model
+Extend retract if equipped
+Check oil and coolant levels
+Water/Fuel separator
+Exhaust - clamps - hoses - filters
+Start and Stop with outside switch gauges if equipped
+
+Utility Compartment
+Black water valve
+Gray water valve
+Sewer hose connection and storage
+Tank flush system if equipped
+Outside Shower or water faucet turn on/on
+Lights
+Drinking water hose (and reel if equipped)
+Water Filter if equipped
+Water connection
+Water pressure reducer
+Telephone and Cable connections
+Compartment heat
+30-amp adapter and pigtail
+
+Propane System
+Inspect tanks or cylinders, regulator vent, hoses and vent orientation
+Verify adequate level of propane in tank/s
+Perform operating pressure test
+-- pressue
+Perform regulator lockup test
+-- pressue
+Adjust regulator if necessary
+Perform timed pressure drop test
+Perform bubble or electronic leak test
+
+Wheels/Tires
+Inspect wheels
+Lug nuts/Torque
+Inspect tires
+Recommended tire pressure
+DOT date code
+Tire Pressure
+Check Hitch Rating
+Inspect Towing plug wiring
+
+Lights and Mirrors Inspect
+Taillights
+Brake lights
+Front turn signal
+Rear turn signal
+Backup light
+Running lights
+Porch light
+Docking lights
+
+Chassis Check/Inspect
+Wiring - harnesses - fuse location
+Shock absorbers leaks and attachment points
+Undercoating - Rust
+Leveling Jacks or air leveling for oil leaks or damage
+
+Electrical / Lighting
+Inspect shore power cord, reel, test
+continuity of all terminals
+Perform shore cord safety ground continuity test, plug shore cord into RV, test resistance from shore cord ground pin to clean chassis ground, should be close to O ohms.
+-- Voltage at Source
+Perform hot skin test; test voltage at shore source, verify correct polarity at source using NCVT, plug shore cord into shore power, using NCVT check for voltage at 3 metallic points.
+-- Locations tested
+Test GFCI system and ALL wall outlets for
+correct voltage AND polarity.
+Operate all 120v switches
+Check battery, venting, terminals, cables,
+hold down, mounting, date of Mfg.
+-- Date of Mfg
+Check electrolyte level
+Check battery state of charge
+-- Voltage
+Test converter charger, check voltage at battery and converter. Measure voltage drop.
+-- Voltage at battery
+-- Voltage at converter
+-- Voltage drop
+Check voltage at usb plugs
+Operate all 12v switches
+
+Generator
+Check air and fuel filter, oil level, inspect air intake and exhaust, mounting
+Turn off main 120v breaker, start from dash, run 5 minutes, listen for unusual noises
+Test unloaded voltage
+-- Voltage
+Switch on main breaker and run appliances 50% load on generator
+Test loaded voltage
+-- Voltage
+Stop and start generator from all control panels
+Leave Generator running
+
+Inverter
+Understand operation and function of power management panel and inverter display.
+Check displays and control lights
+Shut down generator, unplug shore power, leave inverter on, verify that inverter took over all AC voltages, test GFCI function, test by running microwave for one minute.
+
+Alarms Check Batteries and Test
+Propane
+C02
+Smoke
+Fire extinguishers - age - placement - mounting type
+
+Cabinets and Drawers
+Hinges
+Latches
+Shelves
+Hardware
+Rails
+Cracked wood, scratch&#39;s, nicks, loose handles
+Struts
+Misaligned cabinet doors and drawers
+Safe - Combination if equipped
+
+Closets
+Operate Doors
+Door Latches
+Lights and switches/automatic
+hanging rods
+
+Furniture
+Construction
+Upholstery condition
+Sofa bed open/close
+Seatbelts
+Main Bed - check storage - struts - engine access
+
+Counter Tops
+Alignment
+Fastening devices
+Backsplash
+Sink and stove covers
+Scratches
+
+Blinds/Shades/Curtains
+Operate all blinds
+Alignment
+Mechanism
+Check all valences and trim
+Brackets
+Rods
+Hooks
+Pull cover over Windshield - check storage - stains
+Check for evidence of water leak
+Entry Door curtain attachment - storage
+
+Wall covering
+Securely attached
+Seams, joints, borders
+Check for nicks, scratches, tears
+Pictures - Mirrors
+Water stains and leaks on ceiling and wall
+
+Floor Covering
+Carpet fit and finish
+Installation
+Tile Floor - cracked or lose tiles - grout condition
+Wood Floor scratches - water damage
+Look for slide(s) dragging on floors
+
+Entertainment Operation
+TV Antenna
+Television(s)
+VCR - DVD - SAT
+Surround Sound
+CD player/changer
+Switches
+Controls
+Remote Controls
+CB Radio
+
+Microwave/Convection Oven
+Heat water for 1 minute
+Installation Fit and Finish
+Controls - Knobs - Indicator - Accessories
+
+Propane Stove / Oven
+Light burners, observe flame shape
+Light oven, observe flame shape
+Installation Fit and Finish
+Gas fittings
+Controls - Knobs - Gaskets
+Outside vent if equipped
+
+Refrigerator
+Understand Controls and status lights
+Check installation, fit and finish
+Operate with AC
+Set temperature to high, check coil for cooling, ice maker
+Open outside access door
+Check for Rust or leaks
+Unplug 120v source, operate with propane check heating column is lit outside.
+
+Plumbing
+Perform water system pressure test
+Verify water heater IS NOT in bypass mode. Turn off water pump switch.
+Disconnect or close off ice maker and water accumulator.
+Release pressure from hot and cold fixtures, close all faucets and water drains
+Remove city water inlet screen, connect pressure test device, pressurize with air to 80-100 psi for 10 minutes.
+Verify no pressure loss
+Disconnect test device, reinstall city water inlet screen.
+
+Inspect fresh water system
+Inspect water pump strainer, clean if necessary
+Verify all low point drains are closed or plugged
+Fill fresh water tank at gravity fill point, verify tank vent operation, not clogged, verify tank level monitors working properly.
+
+Water Pump Operation
+Switch pump on, pump should stop when max pressure is reached, no on/off cycling
+Audible noise level
+Verify operation of all fixtures
+Switch water pump off, connect city water hose
+Verify operation of all fixtures, proper flow.
+
+Fixture Drain Flow Test
+Plug sink and fill half way, drain, observe for proper drainage and leaks in drain pipes.
+
+Perform flood test
+Fill all holding tanks to lowest fixture drain, verify tank monitor/s operation.
+Hold for 15 minutes, check piping and tanks for leaks.
+Drain entire system with sewer hose, verify proper operation of black and gray water termination valves.
+
+Water Heater Operation
+Check outside vent
+Check Anode Rod if possible (no water in system)
+Operate on AC, (must be full of water), test T&P valve, verify water is heating
+Operate on propane (if applicable)
+Check flame; shape and color
+Verify hot water from all faucets
+
+Aqua-Hot or Hydro-Hot if equipped
+Turn on Diesel switch
+Check for Hot water at sinks
+Turn on Heat at Thermostat
+Check each Zone
+Check engine pre-heat switch and operate
+
+AC/Heat Pumps and Air Vents
+Test on Shore power
+Operate all AC/Heat Pump vents
+Check Filters and fins
+Listen to fan noise
+Measure temperature in duct, Delta-T
+Check and operate air vents in kitchen and bathroom
+
+Furnace
+Operate on all power sources (Check temperature at duct)
+Vent operation and installation fit/finish
+Verify no musty odor or propane smell
+Listen for excessive noise in bedroom
+
+Leveling
+Level coach with auto leveling
+Try manual leveling
+Operate front, rear, left, right manually
+
+Slide out
+Check seals while slide is retracted and extended
+Operate each slide out several times
+Check interlocks
+Check manual retract (auto may fail in future)
+Check alignment of wheels and clearance to floor
+Locking operation
+Hydraulic system - leaks - hoses -valves - pump
+Check Awning over slide-outs
+Awning Latch/Lock
+Slide out mechanism
+Slide fit and finish when retracted
+
+Maintenance Records VERY IMPORTANT
+Check for ALL Systems Documents
+Get Instruction Book and Warranty Card(s) if applicable

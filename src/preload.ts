@@ -1,9 +1,9 @@
 import { contextBridge, ipcRenderer } from "electron";
 
 contextBridge.exposeInMainWorld("electronAPI", {
-  getTableRow: () => {
+  getTableRow: (type: string) => {
     console.log("HEERE");
-    return ipcRenderer.invoke("generic-event")
+    return ipcRenderer.invoke("generic-event", type)
   }
 });
 

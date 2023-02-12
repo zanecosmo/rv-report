@@ -1,6 +1,6 @@
 {
   "watch": ["./"],
-  "ingnore": ["build"],
+  "ignore": ["build"],
   "ext": ".ts",
-  "exec": "npx tsc && electron ."
+  "exec": "tsc && electron ./out/app.js"
 }
