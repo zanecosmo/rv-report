@@ -1,0 +1,6 @@
+{
+  "watch": ["./"],
+  "ingnore": ["build"],
+  "ext": ".ts",
+  "exec": "npx tsc && electron ."
+}
