@@ -47,14 +47,17 @@ const generateCustomerInitialState = (customer) => {
         };
 };
 const Customer = ({ customer, setCustomer }) => {
-    console.log(customer);
     const [isEditing, setIsEditing] = (0, react_1.useState)(false);
     const [formState, setFormState] = (0, react_1.useState)(generateCustomerInitialState(customer));
     const handleChange = (e) => {
         setFormState(Object.assign(Object.assign({}, formState), { [e.target.name]: e.target.value }));
     };
+    const saveAndCancelButtons = (react_1.default.createElement(react_1.default.Fragment, null,
+        react_1.default.createElement("button", { type: "button", onClick: () => console.log("SAVE CLICKED") }, "Save"),
+        react_1.default.createElement("button", { type: "button", onClick: () => setIsEditing(false) }, "Cancel")));
+    const editButton = react_1.default.createElement("button", { type: "button", onClick: () => setIsEditing(true) }, "Edit Customer");
     return (react_1.default.createElement("section", null,
-        react_1.default.createElement("button", { type: "button", onClick: () => setIsEditing(true) }, "Edit Customer"),
+        isEditing ? saveAndCancelButtons : editButton,
         react_1.default.createElement("h3", null, "Customer Info"),
         react_1.default.createElement("hr", null),
         react_1.default.createElement("label", { htmlFor: "firstName" }, "First Name"),

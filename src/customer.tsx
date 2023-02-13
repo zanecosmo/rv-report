@@ -36,7 +36,6 @@ const generateCustomerInitialState = (customer: CustomerInfo | null): FormState 
 };
 
 export const Customer: FC<CustomerProps> = ({ customer, setCustomer }): JSX.Element => {
-  console.log(customer);
   const [ isEditing, setIsEditing] = useState(false);
   const [ formState, setFormState ] = useState<FormState>(generateCustomerInitialState(customer));
 
@@ -44,9 +43,19 @@ export const Customer: FC<CustomerProps> = ({ customer, setCustomer }): JSX.Elem
     setFormState({ ...formState, [e.target.name]: e.target.value })
   };
 
+  const saveAndCancelButtons = (
+    <>
+      <button type="button" onClick={() => console.log("SAVE CLICKED")}>Save</button>
+      <button type="button" onClick={() => setIsEditing(false)}>Cancel</button>
+    </>
+  );
+
+  const editButton = <button type="button" onClick={() => setIsEditing(true)}>Edit Customer</button>;
+
   return (
     <section>
-        <button type="button" onClick={() => setIsEditing(true)}>Edit Customer</button>
+      {isEditing ? saveAndCancelButtons : editButton}
+        
 
         <h3>Customer Info</h3>
         <hr />
