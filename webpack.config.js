@@ -5,13 +5,13 @@ module.exports = {
   target: "electron-renderer",
   mode: "development",
   devtool: "inline-source-map",
-  entry: "./src/renderer.ts",
+  entry: "./src/renderer.tsx",
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "bundle.js"
   },
   resolve: {
-    extensions: [".ts", ".js"]
+    extensions: [".ts", ".tsx", ".js", ".jsx"]
   },
   module: {
     rules: [

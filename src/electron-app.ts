@@ -15,6 +15,13 @@ export const database = {
   }
 };
 
+// get customer id
+// go into report file
+// parse report file
+// get the reports that are associated with the customer
+
+
+
 export const extractForm = (items: string, formType: string) => {
 
   const categories: string[] = items.split("\r\n\r\n"); // entire category, including line-items and notes

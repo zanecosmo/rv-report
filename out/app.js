@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,80 +31,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.extractForm = exports.database = void 0;
-const path_1 = __importDefault(require("path"));
-const fs_1 = __importDefault(require("fs"));
-const electron_1 = require("electron");
-// import { UUID } from "uuidjs";
-// const uuid: string = UUID.generate();
-exports.database = {
-    grabLineItems: () => fs_1.default.readFileSync("./db/line-items.txt").toString(),
-    grabCustomerInfo: () => JSON.parse(fs_1.default.readFileSync("./db/customer-info.json").toString()),
-    updateCustomerInfo: (customerInfo) => {
-        fs_1.default.writeFileSync("customer-info.json", JSON.stringify(customerInfo));
-    }
+exports.App = void 0;
+const react_1 = __importStar(require("react"));
+const App = () => {
+    const [customers, setCustomers] = (0, react_1.useState)([]);
+    const getCustomerList = () => __awaiter(void 0, void 0, void 0, function* () { return setCustomers(yield window.electronAPI.getCustomerList()); });
+    (0, react_1.useEffect)(() => void getCustomerList(), []);
+    return (react_1.default.createElement("div", { className: "customer-list" },
+        " HELLO THER",
+        customers && customers.map(customer => {
+            console.log(customer.id);
+            return react_1.default.createElement("div", { key: customer.id }, `${customer.firstName} ${customer.lastName}`);
+        })));
 };
-const extractForm = (items, formType) => {
-    const categories = items.split("\r\n\r\n"); // entire category, including line-items and notes
-    const categoriesArray = [];
-    for (let i = 0; i < categories.length; i++) {
-        const cat = categories[i];
-        if (categories[i].split(" ")[0] === "**" && formType !== "motorhome")
-            continue;
-        const lineItems = cat.split("\r\n"); // each line item, inlcuding title (first one) and notes
-        if (lineItems.length === 0)
-            continue;
-        const category = lineItems.shift(); // title
-        const rows = [];
-        for (let i = 0; i < lineItems.length; i++) { // line-items and notes
-            if (lineItems[i].split(" ")[0] === "--") {
-                let notes = rows[rows.length - 1].notes;
-                rows[rows.length - 1].notes = notes ? notes += ` ${lineItems[i]}` : lineItems[i];
-            }
-            else {
-                rows.push({
-                    lineItem: lineItems[i],
-                    pass: false,
-                    fail: false,
-                    notes: ""
-                });
-            }
-            ;
-        }
-        ;
-        categoriesArray.push({
-            categoryName: category,
-            formRows: rows,
-            notes: ""
-        });
-    }
-    ;
-    return categoriesArray;
-};
-exports.extractForm = extractForm;
-const createWindow = () => {
-    const mainWindow = new electron_1.BrowserWindow({
-        width: 1000,
-        height: 800,
-        webPreferences: {
-            preload: path_1.default.join(__dirname, "./preload.js")
-        }
-    });
-    mainWindow.webContents.openDevTools();
-    electron_1.ipcMain.handle("generic-event", (_event, type) => {
-        return (0, exports.extractForm)(exports.database.grabLineItems(), type);
-    });
-    electron_1.ipcMain.handle("get-customer-list", (_event) => __awaiter(void 0, void 0, void 0, function* () {
-        return exports.database.grabCustomerInfo();
-    }));
-    mainWindow.loadFile('../public/index.html');
-};
-electron_1.app.on("ready", () => createWindow());
-electron_1.app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin')
-        electron_1.app.quit();
-});
+exports.App = App;
