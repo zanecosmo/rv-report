@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Dispatch, FC, SetStateAction, useEffect, useState } from "react";
+import React, { ChangeEvent, Dispatch, FC, SetStateAction, useState } from "react";
 import { CustomerInfo } from "./types";
 
 export interface CustomerProps {
@@ -6,7 +6,7 @@ export interface CustomerProps {
   setCustomer: Dispatch<SetStateAction<CustomerInfo | null>>
 };
 
-interface FormState extends Record<string, string> {
+interface CustomerFormState extends Record<string, string> {
   id: string,
   firstName: string,
   lastName: string,
@@ -15,47 +15,39 @@ interface FormState extends Record<string, string> {
   email: string
 };
 
-const generateCustomerInitialState = (customer: CustomerInfo | null): FormState => {
-  return customer === null
-    ? {
-        id: "",
-        firstName: "",
-        lastName: "",
-        address: "",
-        phone: "",
-        email: ""
-      }
-    : {
-        id: customer.id!,
-        firstName: customer.firstName,
-        lastName: customer.lastName,
-        address: customer.address,
-        phone: customer.phone,
-        email: customer.email
-      }
-};
-
 export const Customer: FC<CustomerProps> = ({ customer, setCustomer }): JSX.Element => {
-  const [ isEditing, setIsEditing] = useState(false);
-  const [ formState, setFormState ] = useState<FormState>(generateCustomerInitialState(customer));
+  const [ isEditing, setIsEditing] = useState(customer.id === "" ? true : false);
+  const [ formState, setFormState ] = useState<CustomerFormState>(customer as CustomerFormState);
+
+  console.log(formState);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormState({ ...formState, [e.target.name]: e.target.value })
+    setFormState({ ...formState, [e.target.name]: e.target.value });
+  };
+  
+  const saveCustomer = () => {
+    window.electronAPI.saveCustomerInfo(formState);
+    setIsEditing(false);
   };
 
-  const saveAndCancelButtons = (
-    <>
-      <button type="button" onClick={() => console.log("SAVE CLICKED")}>Save</button>
-      <button type="button" onClick={() => setIsEditing(false)}>Cancel</button>
-    </>
-  );
-
-  const editButton = <button type="button" onClick={() => setIsEditing(true)}>Edit Customer</button>;
+  const deleteCustomer = () => {
+    window.electronAPI.deleteCustomer(customer);
+    setCustomer(null);
+  }
 
   return (
     <section>
-      {isEditing ? saveAndCancelButtons : editButton}
-        
+      {isEditing
+        ? (<>
+            <button type="button" onClick={saveCustomer}>Save</button>
+            <button type="button" onClick={() => setIsEditing(false)}>Cancel</button>
+          </>)
+        : (<>
+            <button type="button" onClick={() => setIsEditing(true)}>Edit Customer</button>
+            <button type="button" onClick={() => setCustomer(null)}>Back</button>
+            <button type="button" onClick={deleteCustomer}>Delete Customer</button>
+
+          </>)}
 
         <h3>Customer Info</h3>
         <hr />
@@ -89,8 +81,8 @@ export const Customer: FC<CustomerProps> = ({ customer, setCustomer }): JSX.Elem
 
         <label htmlFor="phone">Phone Number</label>
         <input
-          type="phone"
-          name="address"
+          type="text"
+          name="phone"
           value={ formState.phone }
           onChange={handleChange}
           readOnly={!isEditing}
@@ -98,8 +90,8 @@ export const Customer: FC<CustomerProps> = ({ customer, setCustomer }): JSX.Elem
 
         <label htmlFor="email">Email</label>
         <input
-          type="email"
-          name="address"
+          type="text"
+          name="email"
           value={ formState.email }
           onChange={handleChange}
           readOnly={!isEditing}

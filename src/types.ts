@@ -21,14 +21,17 @@ export interface FormCategory {
 };
 
 export interface Report {
-  customerId: number,
+  id: string,
+  customerId: string,
   dateCreated: Date,
-  categories: FormCategory[]
-}
+  form: FormCategory[]
+};
 
 export interface IElectronAPI {
   getTableRow: (type: string) => FormCategory[],
   getCustomerList: () => CustomerInfo[],
+  saveCustomerInfo: (customer: CustomerInfo) => void,
+  deleteCustomer: (customer: CustomerInfo) => void
 };
 
 declare global {

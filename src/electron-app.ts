@@ -3,24 +3,15 @@ import { FormCategory, FormRow } from "./types";
 import FS from "fs";
 import { CustomerInfo } from "./types";
 import { app, BrowserWindow, ipcMain, IpcMainInvokeEvent } from "electron";
-// import { UUID } from "uuidjs";
-
-// const uuid: string = UUID.generate();
+import { v4 as uuidv4 } from 'uuid';
 
 export const database = {
   grabLineItems: () => FS.readFileSync("./db/line-items.txt").toString(),
   grabCustomerInfo: (): CustomerInfo[] => JSON.parse(FS.readFileSync("./db/customer-info.json").toString()),
-  updateCustomerInfo: (customerInfo: CustomerInfo) => {
-    FS.writeFileSync("customer-info.json", JSON.stringify(customerInfo));
+  saveCustomerInfo: (customers: CustomerInfo[]) => {
+    FS.writeFileSync("./db/customer-info.json", JSON.stringify(customers));
   }
 };
-
-// get customer id
-// go into report file
-// parse report file
-// get the reports that are associated with the customer
-
-
 
 export const extractForm = (items: string, formType: string) => {
 
@@ -87,6 +78,29 @@ const createWindow = () => {
   ipcMain.handle("get-customer-list", async (_event: IpcMainInvokeEvent): Promise<CustomerInfo[]> => {
     return database.grabCustomerInfo();
   });
+
+  ipcMain.handle("save-customer-info", async (_event: IpcMainInvokeEvent, customer: CustomerInfo): Promise<void> => {
+    const customers: CustomerInfo[] = database.grabCustomerInfo();
+    const index = customers.findIndex(c => c.id === customer.id);
+    console.log(index);
+    if (index !== -1) customers[index] = customer;
+    else {
+      customer.id = uuidv4();
+      customers.push(customer);
+      console.log(customer);
+    };
+    database.saveCustomerInfo(customers);
+  });
+
+  ipcMain.handle("delete-customer", async (_event: IpcMainInvokeEvent, customer: CustomerInfo): Promise<void> => {
+    const customers: CustomerInfo[] = database.grabCustomerInfo();
+    const index = customers.findIndex(c => c.id === customer.id);
+    if (index === -1) throw Error("USTOMER DOESN'T EXIST");
+    else {
+      customers.splice(index, 1);
+    };
+    database.saveCustomerInfo(customers);
+  })
 
   mainWindow.loadFile('../public/index.html')
 };
