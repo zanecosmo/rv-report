@@ -1,12 +1,14 @@
-import { FormCategory, FormRow } from "./types";
+import { Customer, Form, Row } from "./types";
 import FS from "fs";
-import { CustomerInfo } from "./types";
 
 export const database = {
   grabLineItems: () => FS.readFileSync("./db/line-items.txt").toString(),
-  grabCustomerInfo: () => JSON.parse(FS.readFileSync("customer-info.json").toString()),
-  updateCustomerInfo: (customerInfo: CustomerInfo) => {
-    FS.writeFileSync("customer-info.json", JSON.stringify(customerInfo));
+  grabCustomers: (): Customer[] => JSON.parse(FS.readFileSync("./db/customer-info.json").toString()),
+  saveCustomerInfo: (customers: Customer[]) => {
+    FS.writeFileSync("./db/customer-info.json", JSON.stringify(customers));
+  },
+  getReportTemplate: (type: "towable" | "motorhome"): Form => {
+    return JSON.parse(FS.readFileSync(`./db/templates/${type}-template.json`).toString())
   }
 };
 
@@ -14,7 +16,7 @@ export const extractForm = (items: string, formType: string) => {
 
   const categories: string[] = items.split("\r\n\r\n"); // entire category, including line-items and notes
 
-  const categoriesArray: FormCategory[] = [];
+  const categoriesArray: Form = [];
   
   for (let i = 0; i < categories.length; i++) {
 
@@ -28,7 +30,7 @@ export const extractForm = (items: string, formType: string) => {
 
     const category = lineItems.shift()!; // title
 
-    const rows: FormRow[] = [];
+    const rows: Row[] = [];
 
     for (let i = 0; i < lineItems.length; i++) { // line-items and notes
 
@@ -49,7 +51,7 @@ export const extractForm = (items: string, formType: string) => {
 
     categoriesArray.push({
       categoryName: category,
-      formRows: rows,
+      rows: rows,
       notes: ""
     });
   };

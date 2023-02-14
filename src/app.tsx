@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FC, useEffect, useState } from "react";
-import { Customer, CustomerProps } from "./customer";
-import { CustomerInfo, FormCategory, FormRow, Report } from "./types";
+import { CustomerView, CustomerProps } from "./customer";
+import { Customer, Category, Report } from "./types";
 
 // get customer id
 // go into report file
@@ -20,7 +20,7 @@ import { CustomerInfo, FormCategory, FormRow, Report } from "./types";
 
 
 
-const buildReport = (report: FormCategory[]) => {
+const buildReport = (report: Category[]) => {
   let rowNumber = 0;
   return (
     <table>
@@ -45,7 +45,7 @@ const buildReport = (report: FormCategory[]) => {
               <th colSpan={4}>${category.categoryName}</th>
             </tr>
 
-            {category.formRows.map(row => {
+            {category.rows.map(row => {
               console.log()
 
               const newRow = (
@@ -369,12 +369,14 @@ const ReportForm: FC<ReportProps> = ({ report, isTemplate }): JSX.Element => {
 };
 
 export const App: FC = (): JSX.Element => {
-  const [ customers, setCustomers ] = useState<CustomerInfo[]>([]);
-  const [ customer, setCustomer ] = useState<CustomerInfo | null>(null);
+  const [ customers, setCustomers ] = useState<Customer[]>([]);
+  const [ customer, setCustomer ] = useState<Customer | null>(null);
 
   const getCustomerList = async () => setCustomers(await window.electronAPI.getCustomerList());
-  const getCustomer = (id: string) => {
+
+  const getCustomer = async (id: string) => {
     const customer = customers.find(customer => customer.id === id);
+    // await window.electronAPI.getReportList(id);
     if (customer) setCustomer(customer);
     else throw Error("INVALID CUSTOMER");
   };
@@ -387,7 +389,7 @@ export const App: FC = (): JSX.Element => {
       address: "",
       phone: "",
       email: ""
-    })
+    });
   };
 
   useEffect(() => void getCustomerList(), [customer])
@@ -396,7 +398,7 @@ export const App: FC = (): JSX.Element => {
     <>
       <button type="button" onClick={() => createNewCustomer()}>Add Customer</button>
       <div className="customer-list">
-        {customers && customers.map(customer => {
+        {customers && customers.map((customer: Customer) => {
           return (
             <div key={customer.id} onClick={() => getCustomer(customer.id!)}>
               {`${customer.firstName} ${customer.lastName}`}
@@ -412,5 +414,5 @@ export const App: FC = (): JSX.Element => {
     setCustomer: setCustomer
   };
 
-  return (<Customer { ...customerProps }/>);
+  return (<CustomerView { ...customerProps }/>);
 };

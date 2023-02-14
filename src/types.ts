@@ -1,4 +1,30 @@
-export interface CustomerInfo {
+export type InputTypes = string | boolean | Date;
+export const isInputType = (any: any): any is InputTypes =>  {
+  return (typeof any === "string" || typeof any === "boolean" || any instanceof Date) ? true : false;
+};
+
+export interface FlattenedState {
+  [key: string]: InputTypes
+};
+
+export interface NestedObject { [key: string]: any }
+
+export interface Category {
+  categoryName: string,
+  rows: Row[],
+  notes: string
+};
+
+export interface Row {
+  lineItem: string,
+  pass: boolean,
+  fail: boolean,
+  notes: string
+};
+
+export type Form = Category[];
+
+export interface Customer {
   id: null | string,
   firstName: string,
   lastName: string,
@@ -7,31 +33,20 @@ export interface CustomerInfo {
   email: string
 };
 
-export interface FormRow {
-  lineItem: string,
-  pass: boolean,
-  fail: boolean,
-  notes: string
-};
-
-export interface FormCategory {
-  categoryName: string,
-  formRows: FormRow[],
-  notes: string
-};
-
 export interface Report {
   id: string,
-  customerId: string,
+  type: string,
+  customer: Customer,
   dateCreated: Date,
-  form: FormCategory[]
+  form: Form
 };
 
 export interface IElectronAPI {
-  getTableRow: (type: string) => FormCategory[],
-  getCustomerList: () => CustomerInfo[],
-  saveCustomerInfo: (customer: CustomerInfo) => void,
-  deleteCustomer: (customer: CustomerInfo) => void
+  getTableRow: (type: string) => Form,
+  getCustomerList: () => Customer[],
+  saveCustomerInfo: (customer: Customer) => void,
+  deleteCustomer: (id: string) => void,
+  generateReport: (customer: Customer, type: "towable" | "motorhome") => Promise<Report>
 };
 
 declare global {

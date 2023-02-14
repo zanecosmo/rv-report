@@ -1,4 +1,3 @@
-"use strict";
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -10,51 +9,6 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
-exports.__esModule = true;
-exports.extractForm = void 0;
-var fs_1 = require("fs");
-// UTILS
-var extractForm = function (items, formType) {
-    var categories = items.split("\r\n\r\n"); // entire category, including line-items and notes
-    var categoriesArray = [];
-    for (var i = 0; i < categories.length; i++) {
-        var cat = categories[i];
-        if (categories[i].split(" ")[0] === "**" && formType !== "motorhome")
-            continue;
-        var lineItems_1 = cat.split("\r\n"); // each line item, inlcuding title (first one) and notes
-        if (lineItems_1.length === 0)
-            continue;
-        var category = lineItems_1.shift(); // title
-        var rows = [];
-        for (var i_1 = 0; i_1 < lineItems_1.length; i_1++) { // line-items and notes
-            if (lineItems_1[i_1].split(" ")[0] === "--") {
-                var notes = rows[rows.length - 1].notes;
-                rows[rows.length - 1].notes = notes ? notes += " ".concat(lineItems_1[i_1]) : lineItems_1[i_1];
-            }
-            else {
-                rows.push({
-                    lineItem: lineItems_1[i_1],
-                    pass: false,
-                    fail: false,
-                    notes: ""
-                });
-            }
-            ;
-        }
-        ;
-        categoriesArray.push({
-            categoryName: category,
-            rows: rows,
-            notes: ""
-        });
-    }
-    ;
-    return categoriesArray;
-};
-exports.extractForm = extractForm;
-// get file from line-items
-var lineItems = fs_1["default"].readFileSync("../db/line-items.txt");
-console.log(lineItems);
 ;
 ;
 ;
@@ -158,7 +112,7 @@ var unflatten = function (state) {
     ;
     return result;
 };
-// console.log(flatten(testReport.form));
+console.log(flatten(testReport.form));
 // TESTS
 // const nested1 = [1, 2, 3, 4];
 // const nested2 = [1, 2, {a: 1, b: 2}];

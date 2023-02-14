@@ -1,81 +1,50 @@
-// TYPES
-interface Category {
-  categoryName: string,
-  rows: Row[],
-  notes: string
-};
-
-interface Row {
-  lineItem: string,
-  pass: boolean,
-  fail: boolean,
-  notes: string
-};
-
-type Form = Category[];
-
-interface Report {
-  id: string,
-  customerId: string,
-  date: Date,
-  form: Form
-};
-
-type InputTypes = string | boolean | Date;
-const isInputType = (any: any): any is InputTypes =>  {
-  return (typeof any === "string" || typeof any === "boolean" || any instanceof Date) ? true : false;
-};
-
-interface FlattenedState {
-  [key: string]: InputTypes
-};
-
-interface NestedObject { [key: string]: any }
+import { FlattenedState, InputTypes, NestedObject, Report } from "./types";
 
 // TEST DATA
-const testReport: Report = {
-  id: "",
-  customerId: "",
-  date: new Date(),
-  form: [
-    {
-      categoryName: "electrical",
-      rows: [
-        {
-          lineItem: "plugs",
-          pass: false,
-          fail: false,
-          notes: ""
-        },
-        {
-          lineItem: "wires",
-          pass: false,
-          fail: false,
-          notes: ""
-        }
-      ],
-      notes: ""
-    },
-    {
-      categoryName: "hvac",
-      rows: [
-        {
-          lineItem: "vents",
-          pass: false,
-          fail: false,
-          notes: ""
-        },
-        {
-          lineItem: "duct-tape",
-          pass: false,
-          fail: false,
-          notes: ""
-        }
-      ],
-      notes: ""
-    }
-  ]
-};
+// const testReport: Report = {
+//   id: "",
+//   customer: "",
+//   type: "towable",
+//   dateCreated: new Date(),
+//   form: [
+//     {
+//       categoryName: "electrical",
+//       rows: [
+//         {
+//           lineItem: "plugs",
+//           pass: false,
+//           fail: false,
+//           notes: ""
+//         },
+//         {
+//           lineItem: "wires",
+//           pass: false,
+//           fail: false,
+//           notes: ""
+//         }
+//       ],
+//       notes: ""
+//     },
+//     {
+//       categoryName: "hvac",
+//       rows: [
+//         {
+//           lineItem: "vents",
+//           pass: false,
+//           fail: false,
+//           notes: ""
+//         },
+//         {
+//           lineItem: "duct-tape",
+//           pass: false,
+//           fail: false,
+//           notes: ""
+//         }
+//       ],
+//       notes: ""
+//     }
+//   ]
+// };
 
 // FUNCTIONS
 const flatten = (item: Object | any[] | InputTypes, keyString: string = ""): FlattenedState => {
