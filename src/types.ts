@@ -43,6 +43,7 @@ export interface Customer {
 
 export interface Report {
   id: string | null,
+  RVInfo: string,
   customer: Customer | null,
   dateCreated: Date | null,
   form: Form
@@ -66,5 +67,3 @@ declare global {
     electronAPI: IElectronAPI
   }
 };
-
-// window.electronAPI = window.electronAPI;

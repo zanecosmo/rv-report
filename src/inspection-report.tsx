@@ -1,6 +1,6 @@
-import React, { Dispatch, FC, SetStateAction, useState } from "react";
-import { InspectionForm, P_InspectionForm } from "./inspection-form";
-import { Category, FlattenedState, Form, ReactState, Report } from "./types";
+import React, { ChangeEvent, Dispatch, FC, SetStateAction, useState } from "react";
+import { InspectionForm } from "./inspection-form";
+import { Category, Customer, InspectionType, Report } from "./types";
 import { flatten, unflatten } from "./utils/front-end/utils";
 
 export interface P_InspectionReport {
@@ -11,9 +11,11 @@ export interface P_InspectionReport {
 
 export const InspectionReport: FC<P_InspectionReport> = ({ report, setReport, setAddingReport }): JSX.Element => {
   const [ state, setState ] = useState(flatten(report.form.categories));
+  const [ RVInfo, setRVInfo ] = useState(report.RVInfo);
 
   const saveForm = async () => {
     report.form.categories = unflatten(state) as Category[];
+    report.RVInfo = RVInfo;
     await window.electronAPI.saveReport(report);
     setAddingReport(false);
     setReport(null);
@@ -24,6 +26,23 @@ export const InspectionReport: FC<P_InspectionReport> = ({ report, setReport, se
     setReport(null);
   };
 
+  const reportTitle = report.form.type === InspectionType.MOTORHOME
+    ? "Motorhome Inspection Report"
+    : "Towable RV Inspection Report";
+
+  const createCustomerInfoSection = (customer: Customer) => (
+    <section>
+      <h3>Customer Info</h3>
+      <hr></hr>
+
+      <div>{ `${customer.firstName}${customer.lastName ? ` ${customer.lastName}` : ""}` }</div>
+      {customer.phone !== "" && <div>{ customer.phone }</div>}
+      {customer.email !== "" && <div>{ customer.email }</div>}
+      {customer.address !== "" && <div>{ customer.address }</div>}
+
+    </section>
+  );
+  
   return (
     <div>
 
@@ -32,17 +51,29 @@ export const InspectionReport: FC<P_InspectionReport> = ({ report, setReport, se
       {report.customer && <button type="button" onClick={ () => deleteReport() }>Delete</button>}
 
       {report.customer && (
-        <section>
-          <div>{report.customer.firstName}</div> 
-          <div>{report.customer.lastName}</div> 
-          <div>{report.customer.address}</div> 
-          <div>{report.customer.phone}</div> 
-          <div>{report.customer.email}</div>
-        </section>
+        <>
+          <h1>On The Spot Mobile RV and Trailer Service</h1>
+          <h3>{ reportTitle }</h3>
+
+          { createCustomerInfoSection(report.customer) }
+
+          <section>
+            <h3>Rv Info</h3>
+            <hr></hr>
+            <input
+              type="text"
+              value={ RVInfo }
+              onChange={ (e: ChangeEvent<HTMLInputElement>) => setRVInfo(e.target.value) }
+            />
+          </section>
+        </>
       )}
 
-      <h3>TYPE: {report.form.type}</h3>
-      <InspectionForm state={ state } setState={ setState } />
+      <section>
+        <h3>Report</h3>
+        <hr></hr>
+        <InspectionForm { ...{ state, setState } } />
+      </section>
 
     </div>
   );

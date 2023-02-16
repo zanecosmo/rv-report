@@ -1,6 +1,6 @@
-import React, { ChangeEvent, Dispatch, FC, SetStateAction, useState } from "react";
-import { Customer, FlattenedState, Form, InputTypes, InspectionType, Row } from "./types";
-import { flatten } from "./utils/front-end/utils";
+import React, { ChangeEvent, Dispatch, FC, SetStateAction } from "react";
+import { ContentEditableDiv } from "./content-editable-div";
+import { FlattenedState } from "./types";
 
 export interface P_InspectionForm {
   state: FlattenedState,
@@ -14,12 +14,6 @@ interface CategoryKeys {
 };
 
 export const InspectionForm: FC<P_InspectionForm> = ({ state, setState }): JSX.Element => {
-  // const { form, customer } = props;
-
-  // const flattenedForm: FlattenedState = flatten(form);
-
-  // const [ state, setState ] = useState(flattenedForm);
-
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.type === "checkbox" ? e.target.checked : e.target.value; 
     setState({ ...state, [e.target.name]: value });
@@ -60,14 +54,16 @@ export const InspectionForm: FC<P_InspectionForm> = ({ state, setState }): JSX.E
       </tr>
   
       <tr>
-        <th colSpan={ 4 }>
-          <input
+        <th className="line-item-notes" colSpan={ 4 }>
+          <ContentEditableDiv state={ state } setState={ setState } stateKey={ categoryKeys.categoryName } />
+          {/* <input
             key={ categoryKeys.categoryName }
             type="text"
             name={ categoryKeys.categoryName }
             value={ state[categoryKeys.categoryName] as string }
             onChange={ handleInputChange }
-          />
+            className="textarea-div"
+          /> */}
         </th>
       </tr>
   
@@ -76,13 +72,16 @@ export const InspectionForm: FC<P_InspectionForm> = ({ state, setState }): JSX.E
       <tr>
         <td className="line-item-notes" colSpan={ 4 }>
           {/* <div className="textarea-div" contentEditable="true">{row.notes}</div> */}
-          <input
+          <span>Notes:</span>
+          <ContentEditableDiv state={ state } setState={ setState } stateKey={ categoryKeys.notes } />
+          {/* <input
             key={ categoryKeys.notes }
             type="text"
             name={ categoryKeys.notes }
             value={ state[categoryKeys.notes] as string }
             onChange={ handleInputChange }
-          />
+            className="textarea-div"
+          /> */}
         </td>
       </tr>
     </tbody>
@@ -119,14 +118,16 @@ export const InspectionForm: FC<P_InspectionForm> = ({ state, setState }): JSX.E
     notes: string
   ) => (
     <tr key={key}>
-      <td>
-        <input
+      <td className="line-item-notes">
+        <ContentEditableDiv state={ state } setState={ setState } stateKey={ lineItem } />
+        {/* <input
           key={ lineItem }
           type="text"
           name={ lineItem }
           value={ state[lineItem] as string}
           onChange={ handleInputChange }
-        />
+          className="textarea-div"
+        /> */}
       </td>
   
       <td className="pass-fail">
@@ -154,21 +155,21 @@ export const InspectionForm: FC<P_InspectionForm> = ({ state, setState }): JSX.E
             onChange={ handleInputChange }
           />
           <span className="overlay">
-            <div className="icon-container">
-              <div className="icon"></div>
-            </div>
+            <div className="icon-container"><div className="icon"></div></div>
           </span>
         </label>
       </td>
   
-      <td>
-        <input
+      <td className="line-item-notes">
+        <ContentEditableDiv state={ state } setState={ setState } stateKey={ notes } />
+        {/* <input
           key={ notes }
           type="text"
           name={ notes }
           value={ state[notes] as string }
           onChange={ handleInputChange }
-        />
+          className="textarea-div"
+        /> */}
       </td>
     </tr>
   );

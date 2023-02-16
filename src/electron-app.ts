@@ -2,17 +2,18 @@ import path from "path";
 import { Customer, Form, Report } from "./types";
 import { app, BrowserWindow, ipcMain, IpcMainInvokeEvent } from "electron";
 import { v4 as uuidv4 } from 'uuid';
-import { database, extractForm } from "./utils/back-end/utils";
+import { database } from "./utils/back-end/utils";
 
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
+    // fullscreen: true,
     width: 1000,
     height: 800,
     webPreferences: {
       preload: path.join(__dirname, "./preload.js")
     }
-  })
+  });
 
   mainWindow.webContents.openDevTools();
 
@@ -44,6 +45,7 @@ const createWindow = () => {
     const report: Report = {
       id: customer ? uuidv4() : null,
       customer: customer,
+      RVInfo: "",
       dateCreated: customer ? new Date() : null,
       form: form
     };

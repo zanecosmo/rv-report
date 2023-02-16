@@ -18,7 +18,7 @@ export const CustomerView: FC<P_Customer> = ({ customer, setCustomer }): JSX.Ele
   const getReportList = async (id: string) => setReports(await window.electronAPI.getReportList(id));
 
   useEffect(() => {
-    if (customer.id === "" || addingReport) return; // what if its a new customer? they will not have any reports
+    if (customer.id === "" || addingReport) return;
     getReportList(customer.id!);
   }, [addingReport, report]);
 
@@ -36,14 +36,12 @@ export const CustomerView: FC<P_Customer> = ({ customer, setCustomer }): JSX.Ele
     setCustomer(null);
   };
 
-  if (report) return <InspectionReport report={ report } setReport={ setReport } setAddingReport={ setAddingReport } />
-
-  else if (addingReport) return (<ChooseInspectionType customer={ customer } setAddingReport={ setAddingReport } />)
-
+  if (report) return <InspectionReport { ...{ report, setReport, setAddingReport } } />
+  else if (addingReport) return (<ChooseInspectionType  {...{ customer, setAddingReport } }  />)
   return (
     <>
       <section>
-        {isEditing
+        { isEditing
           ? (<>
               <button type="button" onClick={ saveCustomer }>Save</button>
               <button type="button" onClick={ () => customer.id === "" ? setCustomer(null) : setIsEditing(false) }>Cancel</button>
@@ -53,7 +51,7 @@ export const CustomerView: FC<P_Customer> = ({ customer, setCustomer }): JSX.Ele
               <button type="button" onClick={ () => setCustomer(null) }>Back</button>
               <button type="button" onClick={ deleteCustomer }>Delete Customer</button>
 
-            </>)}
+            </>) }
 
         <h3>Customer Info</h3>
         <hr />
@@ -122,5 +120,5 @@ export const CustomerView: FC<P_Customer> = ({ customer, setCustomer }): JSX.Ele
           ) }
       </section>
     </>
-  )
+  );
 };
