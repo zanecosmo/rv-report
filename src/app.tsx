@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FC, useEffect, useState } from "react";
-import { CustomerView, CustomerProps } from "./customer";
-import { Customer, Category, Report } from "./types";
+import { CustomerView } from "./customer";
+import { Customer, Category } from "./types";
 
 // get customer id
 // go into report file
@@ -409,10 +409,5 @@ export const App: FC = (): JSX.Element => {
     </>
   );
 
-  const customerProps: CustomerProps = {
-    customer: customer,
-    setCustomer: setCustomer
-  };
-
-  return (<CustomerView { ...customerProps }/>);
+  return (<CustomerView customer={customer} setCustomer={setCustomer} />);
 };

@@ -22,7 +22,15 @@ export interface Row {
   notes: string
 };
 
-export type Form = Category[];
+export enum InspectionType {
+  TOWABLE = "towable",
+  MOTORHOME = "motorhome"
+};
+
+export interface Form {
+  type: InspectionType,
+  categories: Category[]
+};
 
 export interface Customer {
   id: null | string,
@@ -34,19 +42,23 @@ export interface Customer {
 };
 
 export interface Report {
-  id: string,
-  type: string,
-  customer: Customer,
-  dateCreated: Date,
+  id: string | null,
+  customer: Customer | null,
+  dateCreated: Date | null,
   form: Form
 };
+
+export type ReactState<T> = [T, React.Dispatch<React.SetStateAction<T>>];
 
 export interface IElectronAPI {
   getTableRow: (type: string) => Form,
   getCustomerList: () => Customer[],
   saveCustomerInfo: (customer: Customer) => void,
   deleteCustomer: (id: string) => void,
-  generateReport: (customer: Customer, type: "towable" | "motorhome") => Promise<Report>
+  generateReport: (customer: Customer | null, type: InspectionType) => Promise<Report>,
+  getReportList: (id: string) => Promise<Report[]>,
+  saveReport: (report: Report) => void,
+  deleteReport: (id: string) => void
 };
 
 declare global {
@@ -55,4 +67,4 @@ declare global {
   }
 };
 
-window.electronAPI = window.electronAPI;
+// window.electronAPI = window.electronAPI;

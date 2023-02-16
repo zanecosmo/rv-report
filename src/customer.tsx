@@ -1,31 +1,26 @@
 import React, { ChangeEvent, Dispatch, FC, SetStateAction, useEffect, useState } from "react";
-import { ChooseReportTypeView } from "./choose-report-type";
+import { ChooseInspectionType } from "./choose-inspection-type";
+import { InspectionReport } from "./inspection-report";
 import { Customer, Report } from "./types";
 
-export interface CustomerProps {
+export interface P_Customer {
   customer: Customer,
   setCustomer: Dispatch<SetStateAction<Customer | null>>
 };
 
-// interface CustomerFormState extends Record<string, string> {
-//   info: CustomerInfo,
-//   reports: Report[]
-// };
-
-export const CustomerView: FC<CustomerProps> = ({ customer, setCustomer }): JSX.Element => {
+export const CustomerView: FC<P_Customer> = ({ customer, setCustomer }): JSX.Element => {
   const [ isEditing, setIsEditing] = useState(customer.id === "" ? true : false);
   const [ formState, setFormState ] = useState<Customer>(customer);
   const [ addingReport, setAddingReport ] = useState(false);
-
   const [ reports, setReports ] = useState<Report[]>([]);
   const [ report, setReport ] = useState<Report | null>(null);
 
-  // const getReportList = async (id: string) => setReports(await window.electronAPI.getReportList(id));
+  const getReportList = async (id: string) => setReports(await window.electronAPI.getReportList(id));
 
   useEffect(() => {
-    if (customer.id === "") return; // what if its a new customer? they will not have any reports
-    // getReportList(customer.id!);
-  }, [reports]);
+    if (customer.id === "" || addingReport) return; // what if its a new customer? they will not have any reports
+    getReportList(customer.id!);
+  }, [addingReport, report]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormState({ ...formState, [e.target.name]: e.target.value });
@@ -41,24 +36,22 @@ export const CustomerView: FC<CustomerProps> = ({ customer, setCustomer }): JSX.
     setCustomer(null);
   };
 
-  const addReport = () => {
-    
-  }
+  if (report) return <InspectionReport report={ report } setReport={ setReport } setAddingReport={ setAddingReport } />
 
-  if (addingReport) return (<ChooseReportTypeView {...customer} />)
+  else if (addingReport) return (<ChooseInspectionType customer={ customer } setAddingReport={ setAddingReport } />)
 
   return (
     <>
       <section>
         {isEditing
           ? (<>
-              <button type="button" onClick={saveCustomer}>Save</button>
-              <button type="button" onClick={() => customer.id === "" ? setCustomer(null) : setIsEditing(false)}>Cancel</button>
+              <button type="button" onClick={ saveCustomer }>Save</button>
+              <button type="button" onClick={ () => customer.id === "" ? setCustomer(null) : setIsEditing(false) }>Cancel</button>
             </>)
           : (<>
-              <button type="button" onClick={() => setIsEditing(true)}>Edit Customer</button>
-              <button type="button" onClick={() => setCustomer(null)}>Back</button>
-              <button type="button" onClick={deleteCustomer}>Delete Customer</button>
+              <button type="button" onClick={ () => setIsEditing(true) }>Edit Customer</button>
+              <button type="button" onClick={ () => setCustomer(null) }>Back</button>
+              <button type="button" onClick={ deleteCustomer }>Delete Customer</button>
 
             </>)}
 
@@ -111,16 +104,22 @@ export const CustomerView: FC<CustomerProps> = ({ customer, setCustomer }): JSX.
         />
       </section>
       <section>
-        {!isEditing && (
+        { !isEditing && (
           <>
-            <button type="button" onClick={() => setAddingReport(true)}>Add Report</button>
-            {reports.length === 0
+            <button type="button" onClick={ () => setAddingReport(true) }>Add Report</button>
+            { reports.length === 0
               ? <div>NO REPORTS</div>
               : reports.map(report => {
-                return <div>{ `${report.type} ${report.dateCreated}`}</div>
-              })}
+                return (
+                  <div key={ report.id }
+                    onClick={ () => setReport(report) }
+                  >
+                    { `${ report.form.type } ${ report.dateCreated }` }
+                  </div>
+                )
+              }) }
           </>
-          )}
+          ) }
       </section>
     </>
   )
