@@ -68,14 +68,13 @@ export const InspectionReport: FC<P_InspectionReport> = ({ report, setReport, se
     for (let i = 0; i < tableRows.length; i++) {
       const row = tableRows[i];
       const height = row.offsetHeight;
-
-      if (pageHeight < currentHeight + height) {
+      
+      if (pageHeight < currentHeight + height || i === tableRows.length - 1) {
         console.log("TOO SMALL");
         newTable.appendChild(tbody);
         page.appendChild(newTable);
         await pdf.html(page, {
           callback: (doc: jsPDF) => {
-            console.log(`first-callback`);
             pdf = doc;
           },
           y: pageHeight * numberOfPages,
@@ -88,12 +87,15 @@ export const InspectionReport: FC<P_InspectionReport> = ({ report, setReport, se
         page = document.createElement("div");
         newTable = document.createElement("table");
         tbody = document.createElement("tbody");
+        tbody.appendChild(row.cloneNode(true));
       }
       else {
+        // console.log("TOO LARGE");
+        // console.log(row.firstChild)
         tbody.appendChild(row.cloneNode(true));
         currentHeight+= height;
       };
-
+      console.log(row.firstChild)
       console.log(currentHeight, numberOfPages, pageHeight, row.offsetHeight);
     };
 
