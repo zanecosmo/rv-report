@@ -3,6 +3,9 @@ import { InspectionForm } from "./inspection-form";
 import { Category, Customer, InspectionType, Report } from "./types";
 import { flatten, unflatten } from "./utils/front-end/utils";
 
+import { jsPDF } from "jspdf";
+
+
 export interface P_InspectionReport {
   report: Report,
   setReport: Dispatch<SetStateAction<Report | null>>,
@@ -19,6 +22,53 @@ export const InspectionReport: FC<P_InspectionReport> = ({ report, setReport, se
     await window.electronAPI.saveReport(report);
     setAddingReport(false);
     setReport(null);
+  };
+
+  const saveAsPDF = () => {
+    const doc = new jsPDF();
+
+    const report = document.querySelector(".printable-form")! as HTMLElement;
+    // const header = report.querySelector(".report-header")! as HTMLElement;
+    // const table = report.querySelector("table")! as HTMLElement;
+
+    // const pdfWidth = 850;
+    // const pdfHeight = 1100;
+
+    // const headerHeight: number = header.offsetHeight;
+    // let  page: HTMLElement = document.createElement("div");
+    // let tbody: HTMLElement = document.createElement("tbody");
+    
+    // let remainingHeight = pdfHeight - headerHeight;
+
+    // const tableRows = table.querySelectorAll("tr");
+
+    // tableRows.forEach(row => {
+    //   if (remainingHeight < row.offsetHeight) {
+    //     page.appendChild(tbody);
+    //     doc.html(page, {
+    //       margin: [8, 8, 8, 8],
+    //       autoPaging: false,
+    //       width: pdfWidth,
+    //       windowWidth: 10000
+    //     });
+    //     doc.addPage();
+    //     page = document.createElement("div");
+    //     tbody = document.createElement("tbody");
+    //     tbody.appendChild(row);
+    //     remainingHeight = pdfHeight - row.offsetHeight;
+    //   } else {
+    //     tbody.append(row);
+    //     remainingHeight -= row.offsetHeight;
+    //   };
+    // });
+
+    doc.html(report, {
+      callback: () => doc.save(),
+      margin: [8, 8, 8, 8],
+      autoPaging: true,
+      width: 240,
+      windowWidth: 1000
+    });
   };
   
   const deleteReport = async () => {
@@ -49,31 +99,39 @@ export const InspectionReport: FC<P_InspectionReport> = ({ report, setReport, se
       <button type="button" onClick={ () => setReport(null) }>Back</button>
       <button type="button" onClick={ () => saveForm() }>Save</button>
       {report.customer && <button type="button" onClick={ () => deleteReport() }>Delete</button>}
+      {report.customer && <button type="button" onClick={ () => saveAsPDF() }>Save as PDF</button>}
 
-      {report.customer && (
-        <>
-          <h1>On The Spot Mobile RV and Trailer Service</h1>
-          <h3>{ reportTitle }</h3>
+      <div className="printable-form">
 
-          { createCustomerInfoSection(report.customer) }
+        <div className="report-header">
 
-          <section>
-            <h3>Rv Info</h3>
-            <hr></hr>
-            <input
-              type="text"
-              value={ RVInfo }
-              onChange={ (e: ChangeEvent<HTMLInputElement>) => setRVInfo(e.target.value) }
-            />
-          </section>
-        </>
-      )}
+          {report.customer && (
+            <>
+              <h1>On The Spot Mobile RV and Trailer Service</h1>
+              <h3>{ reportTitle }</h3>
 
-      <section>
-        <h3>Report</h3>
-        <hr></hr>
+              { createCustomerInfoSection(report.customer) }
+
+              <section>
+                <h3>Rv Info</h3>
+                <hr></hr>
+                <input
+                  type="text"
+                  value={ RVInfo }
+                  onChange={ (e: ChangeEvent<HTMLInputElement>) => setRVInfo(e.target.value) }
+                />
+              </section>
+            </>
+          )}
+
+          <h3>Report</h3>
+          <hr></hr>
+
+        </div>
+
         <InspectionForm { ...{ state, setState } } />
-      </section>
+
+      </div>
 
     </div>
   );
