@@ -3,7 +3,8 @@ import { InspectionForm } from "./inspection-form";
 import { Category, Customer, InspectionType, Report } from "./types";
 import { flatten, unflatten } from "./utils/front-end/utils";
 
-import { jsPDF } from "jspdf";
+import { HTMLOptions, jsPDF } from "jspdf";
+import html2canvas, { Options } from "html2canvas";
 
 
 export interface P_InspectionReport {
@@ -24,51 +25,79 @@ export const InspectionReport: FC<P_InspectionReport> = ({ report, setReport, se
     setReport(null);
   };
 
-  const saveAsPDF = () => {
-    const doc = new jsPDF();
+  const saveAsPDF = async () => {
+    const report = document.querySelector(".printable-form")!as HTMLElement;
 
-    const report = document.querySelector(".printable-form")! as HTMLElement;
-    // const header = report.querySelector(".report-header")! as HTMLElement;
-    // const table = report.querySelector("table")! as HTMLElement;
+    const header = report.querySelector(".report-header")! as HTMLElement; // everythng except the form
+    const headerHeight = header.offsetHeight - 12;
+    const table = report.querySelector("table")! as HTMLElement;
+    const tableRows = table.querySelectorAll("tr");
 
-    // const pdfWidth = 850;
-    // const pdfHeight = 1100;
+    const jspdf = new jsPDF({
+      unit: "px",
+      format: "letter",
+      hotfixes: ["px_scaling"]
+    });
 
-    // const headerHeight: number = header.offsetHeight;
-    // let  page: HTMLElement = document.createElement("div");
-    // let tbody: HTMLElement = document.createElement("tbody");
+    const margin = 16;
+    const pageHeight = jspdf.internal.pageSize.getHeight() - (margin * 2);
+
+    let pdf: jsPDF = jspdf;
     
-    // let remainingHeight = pdfHeight - headerHeight;
+    let page: HTMLElement = document.createElement("div");
+    let newTable: HTMLElement = document.createElement("table");
+    let tbody = document.createElement("tbody");
 
-    // const tableRows = table.querySelectorAll("tr");
+    page.appendChild(header.cloneNode(true));
 
-    // tableRows.forEach(row => {
-    //   if (remainingHeight < row.offsetHeight) {
-    //     page.appendChild(tbody);
-    //     doc.html(page, {
-    //       margin: [8, 8, 8, 8],
-    //       autoPaging: false,
-    //       width: pdfWidth,
-    //       windowWidth: 10000
-    //     });
-    //     doc.addPage();
-    //     page = document.createElement("div");
-    //     tbody = document.createElement("tbody");
-    //     tbody.appendChild(row);
-    //     remainingHeight = pdfHeight - row.offsetHeight;
-    //   } else {
-    //     tbody.append(row);
-    //     remainingHeight -= row.offsetHeight;
-    //   };
+    let currentHeight = header.offsetHeight;
+    let numberOfPages = 0;
+
+    // page.appendChild(newTable);
+    // await pdf.html(page, {
+    //   callback: (doc: jsPDF) => {
+    //     console.log(`first-callback`);
+    //     pdf = doc;
+    //   },
+    //   y: pageHeight * numberOfPages,
+    //   margin: [margin, margin, margin, margin],
+    //   width: 800 - margin,
+    //   windowWidth: 800
     // });
 
-    doc.html(report, {
-      callback: () => doc.save(),
-      margin: [8, 8, 8, 8],
-      autoPaging: true,
-      width: 240,
-      windowWidth: 1000
-    });
+    for (let i = 0; i < tableRows.length; i++) {
+      const row = tableRows[i];
+      const height = row.offsetHeight;
+
+      if (pageHeight < currentHeight + height) {
+        console.log("TOO SMALL");
+        newTable.appendChild(tbody);
+        page.appendChild(newTable);
+        await pdf.html(page, {
+          callback: (doc: jsPDF) => {
+            console.log(`first-callback`);
+            pdf = doc;
+          },
+          y: pageHeight * numberOfPages,
+          margin: [margin, margin, margin, margin],
+          width: 800 - margin,
+          windowWidth: 800
+        });
+        currentHeight = height;
+        numberOfPages++;
+        page = document.createElement("div");
+        newTable = document.createElement("table");
+        tbody = document.createElement("tbody");
+      }
+      else {
+        tbody.appendChild(row.cloneNode(true));
+        currentHeight+= height;
+      };
+
+      console.log(currentHeight, numberOfPages, pageHeight, row.offsetHeight);
+    };
+
+    pdf.save("multi-page.pdf");
   };
   
   const deleteReport = async () => {
