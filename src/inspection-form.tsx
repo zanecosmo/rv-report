@@ -21,21 +21,26 @@ export const InspectionForm: FC<P_InspectionForm> = ({ state, setState }): JSX.E
 
   const keys: string[] = Object.keys(state);
 
+  // console.log(keys);
+
   const splitIntoCategories = (): string[][] => {
     const categories: string[][] = [];
     let category: string[] = [];
     let index = 0;
   
     keys.forEach(key => {
+      console.log(key);
       const substrings = key.split(".");
       if (parseInt(substrings[0]) === index) category.push(key);
       else {
-        categories.push(category)
+        categories.push(category);
         index++;
         category = [ key ];
       };
     });
   
+    categories.push(category);
+    // console.log(categories);
     return categories;
   };
 

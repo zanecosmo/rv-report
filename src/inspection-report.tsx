@@ -14,7 +14,9 @@ export interface P_InspectionReport {
 };
 
 export const InspectionReport: FC<P_InspectionReport> = ({ report, setReport, setAddingReport }): JSX.Element => {
-  const [ state, setState ] = useState(flatten(report.form.categories));
+  const flattenedState = flatten(report.form.categories);
+  console.log(flattenedState);
+  const [ state, setState ] = useState(flattenedState);
   const [ RVInfo, setRVInfo ] = useState(report.RVInfo);
 
   const saveForm = async () => {
@@ -29,7 +31,6 @@ export const InspectionReport: FC<P_InspectionReport> = ({ report, setReport, se
     const report = document.querySelector(".printable-form")!as HTMLElement;
 
     const header = report.querySelector(".report-header")! as HTMLElement; // everythng except the form
-    const headerHeight = header.offsetHeight - 12;
     const table = report.querySelector("table")! as HTMLElement;
     const tableRows = table.querySelectorAll("tr");
 
@@ -69,10 +70,15 @@ export const InspectionReport: FC<P_InspectionReport> = ({ report, setReport, se
       const row = tableRows[i];
       const height = row.offsetHeight;
       
+      if (i === tableRows.length - 1) {
+        tbody.appendChild(row.cloneNode(true));
+      };
+
       if (pageHeight < currentHeight + height || i === tableRows.length - 1) {
         console.log("TOO SMALL");
         newTable.appendChild(tbody);
         page.appendChild(newTable);
+
         await pdf.html(page, {
           callback: (doc: jsPDF) => {
             pdf = doc;
@@ -82,11 +88,14 @@ export const InspectionReport: FC<P_InspectionReport> = ({ report, setReport, se
           width: 800 - margin,
           windowWidth: 800
         });
+
         currentHeight = height;
         numberOfPages++;
+
         page = document.createElement("div");
         newTable = document.createElement("table");
         tbody = document.createElement("tbody");
+
         tbody.appendChild(row.cloneNode(true));
       }
       else {
