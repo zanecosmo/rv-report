@@ -30,10 +30,10 @@ export const App: FC = (): JSX.Element => {
   if (customer === null) return (
     <>
       <button type="button" onClick={() => createNewCustomer()}>Add Customer</button>
-      <div className="customer-list">
+      <div className="customer-list"> Customers:
         {customers && customers.map((customer: Customer) => {
           return (
-            <div key={customer.id} onClick={() => getCustomer(customer.id!)}>
+            <div className="customer" key={customer.id} onClick={() => getCustomer(customer.id!)}>
               {`${customer.firstName} ${customer.lastName}`}
             </div>
           )

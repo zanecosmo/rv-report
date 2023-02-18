@@ -2,9 +2,7 @@ import React, { ChangeEvent, Dispatch, FC, SetStateAction, useState } from "reac
 import { InspectionForm } from "./inspection-form";
 import { Category, Customer, InspectionType, Report } from "./types";
 import { flatten, unflatten } from "./utils/front-end/utils";
-
-import { HTMLOptions, jsPDF } from "jspdf";
-import html2canvas, { Options } from "html2canvas";
+import {jsPDF } from "jspdf";
 
 
 export interface P_InspectionReport {
@@ -15,7 +13,6 @@ export interface P_InspectionReport {
 
 export const InspectionReport: FC<P_InspectionReport> = ({ report, setReport, setAddingReport }): JSX.Element => {
   const flattenedState = flatten(report.form.categories);
-  console.log(flattenedState);
   const [ state, setState ] = useState(flattenedState);
   const [ RVInfo, setRVInfo ] = useState(report.RVInfo);
 
@@ -54,18 +51,6 @@ export const InspectionReport: FC<P_InspectionReport> = ({ report, setReport, se
     let currentHeight = header.offsetHeight;
     let numberOfPages = 0;
 
-    // page.appendChild(newTable);
-    // await pdf.html(page, {
-    //   callback: (doc: jsPDF) => {
-    //     console.log(`first-callback`);
-    //     pdf = doc;
-    //   },
-    //   y: pageHeight * numberOfPages,
-    //   margin: [margin, margin, margin, margin],
-    //   width: 800 - margin,
-    //   windowWidth: 800
-    // });
-
     for (let i = 0; i < tableRows.length; i++) {
       const row = tableRows[i];
       const height = row.offsetHeight;
@@ -75,7 +60,6 @@ export const InspectionReport: FC<P_InspectionReport> = ({ report, setReport, se
       };
 
       if (pageHeight < currentHeight + height || i === tableRows.length - 1) {
-        console.log("TOO SMALL");
         newTable.appendChild(tbody);
         page.appendChild(newTable);
 
@@ -99,13 +83,9 @@ export const InspectionReport: FC<P_InspectionReport> = ({ report, setReport, se
         tbody.appendChild(row.cloneNode(true));
       }
       else {
-        // console.log("TOO LARGE");
-        // console.log(row.firstChild)
         tbody.appendChild(row.cloneNode(true));
         currentHeight+= height;
       };
-      console.log(row.firstChild)
-      console.log(currentHeight, numberOfPages, pageHeight, row.offsetHeight);
     };
 
     pdf.save("multi-page.pdf");
