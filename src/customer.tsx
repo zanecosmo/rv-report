@@ -109,7 +109,7 @@ export const CustomerView: FC<P_Customer> = ({ customer, setCustomer }): JSX.Ele
               ? <div>NO REPORTS</div>
               : reports.map(report => {
                 return (
-                  <div key={ report.id }
+                  <div className="report" key={ report.id }
                     onClick={ () => setReport(report) }
                   >
                     { `${ report.form.type } ${ report.dateCreated }` }

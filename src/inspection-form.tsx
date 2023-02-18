@@ -21,15 +21,12 @@ export const InspectionForm: FC<P_InspectionForm> = ({ state, setState }): JSX.E
 
   const keys: string[] = Object.keys(state);
 
-  // console.log(keys);
-
   const splitIntoCategories = (): string[][] => {
     const categories: string[][] = [];
     let category: string[] = [];
     let index = 0;
   
     keys.forEach(key => {
-      console.log(key);
       const substrings = key.split(".");
       if (parseInt(substrings[0]) === index) category.push(key);
       else {
@@ -40,7 +37,6 @@ export const InspectionForm: FC<P_InspectionForm> = ({ state, setState }): JSX.E
     });
   
     categories.push(category);
-    // console.log(categories);
     return categories;
   };
 
@@ -61,14 +57,6 @@ export const InspectionForm: FC<P_InspectionForm> = ({ state, setState }): JSX.E
       <tr>
         <th className="line-item-notes" colSpan={ 4 }>
           <ContentEditableDiv state={ state } setState={ setState } stateKey={ categoryKeys.categoryName } />
-          {/* <input
-            key={ categoryKeys.categoryName }
-            type="text"
-            name={ categoryKeys.categoryName }
-            value={ state[categoryKeys.categoryName] as string }
-            onChange={ handleInputChange }
-            className="textarea-div"
-          /> */}
         </th>
       </tr>
   
@@ -79,14 +67,6 @@ export const InspectionForm: FC<P_InspectionForm> = ({ state, setState }): JSX.E
           {/* <div className="textarea-div" contentEditable="true">{row.notes}</div> */}
           <span>Notes:</span>
           <ContentEditableDiv state={ state } setState={ setState } stateKey={ categoryKeys.notes } />
-          {/* <input
-            key={ categoryKeys.notes }
-            type="text"
-            name={ categoryKeys.notes }
-            value={ state[categoryKeys.notes] as string }
-            onChange={ handleInputChange }
-            className="textarea-div"
-          /> */}
         </td>
       </tr>
     </tbody>
@@ -125,14 +105,6 @@ export const InspectionForm: FC<P_InspectionForm> = ({ state, setState }): JSX.E
     <tr key={key}>
       <td className="line-item-notes">
         <ContentEditableDiv state={ state } setState={ setState } stateKey={ lineItem } />
-        {/* <input
-          key={ lineItem }
-          type="text"
-          name={ lineItem }
-          value={ state[lineItem] as string}
-          onChange={ handleInputChange }
-          className="textarea-div"
-        /> */}
       </td>
   
       <td className="pass-fail">
@@ -167,14 +139,6 @@ export const InspectionForm: FC<P_InspectionForm> = ({ state, setState }): JSX.E
   
       <td className="line-item-notes">
         <ContentEditableDiv state={ state } setState={ setState } stateKey={ notes } />
-        {/* <input
-          key={ notes }
-          type="text"
-          name={ notes }
-          value={ state[notes] as string }
-          onChange={ handleInputChange }
-          className="textarea-div"
-        /> */}
       </td>
     </tr>
   );
