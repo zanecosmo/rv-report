@@ -1,64 +1,66 @@
 import { Category, Customer, Form, InspectionType, Report, Row } from "../../types";
+import { app } from "electron";
+import path from "path";
 import FS from "fs";
 
-export const database = {
-  getCustomers: (): Customer[] => JSON.parse(FS.readFileSync("./db/customer-info.json").toString()),
-  saveCustomerInfo: (customers: Customer[]) => {
-    FS.writeFileSync("./db/customer-info.json", JSON.stringify(customers));
-  },
-  getReportTemplate: (type: InspectionType): Form => {
-    return JSON.parse(FS.readFileSync(`./db/templates/${type}-template.json`).toString());
-  },
-  saveReportTemplate: (form: Form) => {
-    FS.writeFileSync(`./db/templates/${form.type}-template.json`, JSON.stringify(form));
-  },
-  getReportList: (): Report[] => JSON.parse(FS.readFileSync("./db/reports.json").toString()),
-  saveReportList: (reports: Report[]) => FS.writeFileSync("./db/reports.json", JSON.stringify(reports))
+export const isDev = () => {
+  // console.log(require.main ? require.main.filename : "NO MAIN");
+  return require.main?.filename.indexOf("app.asar") === -1;
 };
 
-export const extractForm = (items: string, formType: string) => {
+const dbPath = path.join(app.getPath("userData"), "json-database");
 
-  const categories: string[] = items.split("\r\n\r\n"); // entire category, including line-items and notes
+if (!FS.existsSync(dbPath)) {
+  FS.mkdir(dbPath, { recursive: true }, (error: NodeJS.ErrnoException | null): void => {
+      if (error && error.code === "ENOENT") return;
+      else throw error;
+    }
+  );
+};
 
-  const categoriesArray: Category[] = [];
-  
-  for (let i = 0; i < categories.length; i++) {
+const customerInfoPath = path.join(dbPath, "customer-info.json");
+const reportsListPath = path.join(dbPath, "reports.json");
 
-    const cat = categories[i];
+const isError = (error: any): error is NodeJS.ErrnoException => {
+  return error instanceof Error;
+};
 
-    if (categories[i].split(" ")[0] === "**" && formType !== "motorhome") continue;
+const getTemplatePath = (type: string) => {
+  return isDev()
+    ? `./db/templates/${type}-template.json`
+    : `../../db/templates/${type}-template.json`
+};
 
-    const lineItems = cat.split("\r\n"); // each line item, inlcuding title (first one) and notes
 
-    if (lineItems.length === 0) continue;
 
-    const category = lineItems.shift()!; // title
-
-    const rows: Row[] = [];
-
-    for (let i = 0; i < lineItems.length; i++) { // line-items and notes
-
-      if (lineItems[i].split(" ")[0] === "--") {
-        let notes = rows[rows.length - 1].notes;
-        rows[rows.length - 1].notes = notes ? notes += ` ${lineItems[i]}` : lineItems[i];
-      }
-
-      else {
-        rows.push({
-          lineItem: lineItems[i],
-          pass: false,
-          fail: false,
-          notes: ""
-        });
-      };
+export const database = {
+  getCustomers: (): Customer[] => {
+    try {
+      return JSON.parse(FS.readFileSync(customerInfoPath, "utf-8"));
+    }
+    catch (error: unknown) {
+      if (isError(error) && error.code === "ENOENT") return [];
+      else throw error;
     };
-
-    categoriesArray.push({
-      categoryName: category,
-      rows: rows,
-      notes: ""
-    });
-  };
-
-  return categoriesArray;
+  },
+  saveCustomerInfo: (customers: Customer[]) => {
+    FS.writeFileSync(customerInfoPath, JSON.stringify(customers));
+  },
+  getReportTemplate: (type: InspectionType): Form => {
+    return JSON.parse(FS.readFileSync(getTemplatePath(type)).toString());
+  },
+  // this is not used yet
+  saveReportTemplate: (form: Form) => {
+    FS.writeFileSync(getTemplatePath(form.type), JSON.stringify(form));
+  },
+  getReportList: (): Report[] => {
+    try {
+      return JSON.parse(FS.readFileSync(reportsListPath, "utf-8"));
+    }
+    catch (error: unknown) {
+      if (isError(error) && error.code === "ENOENT") return [];
+      else throw error;
+    };
+  },
+  saveReportList: (reports: Report[]) => FS.writeFileSync(reportsListPath, JSON.stringify(reports))
 };

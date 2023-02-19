@@ -54,7 +54,7 @@ export type ReactState<T> = [T, React.Dispatch<React.SetStateAction<T>>];
 export interface IElectronAPI {
   getTableRow: (type: string) => Form,
   getCustomerList: () => Customer[],
-  saveCustomerInfo: (customer: Customer) => void,
+  saveCustomerInfo: (customer: Customer) => Promise<string | undefined>,
   deleteCustomer: (id: string) => void,
   generateReport: (customer: Customer | null, type: InspectionType) => Promise<Report>,
   getReportList: (id: string) => Promise<Report[]>,
