@@ -30,8 +30,8 @@ const isError = (error) => {
 };
 const getTemplatePath = (type) => {
     return (0, exports.isDev)()
-        ? `./db/templates/${type}-template.json`
-        : `../../db/templates/${type}-template.json`;
+        ? path_1.default.join(dbPath, `${type}-template`)
+        : path_1.default.join(dbPath, `${type}-template`);
 };
 exports.database = {
     getCustomers: () => {
@@ -50,7 +50,13 @@ exports.database = {
         fs_1.default.writeFileSync(customerInfoPath, JSON.stringify(customers));
     },
     getReportTemplate: (type) => {
-        return JSON.parse(fs_1.default.readFileSync(getTemplatePath(type)).toString());
+        if (fs_1.default.existsSync(getTemplatePath(type))) {
+            return JSON.parse(fs_1.default.readFileSync(getTemplatePath(type), "utf-8"));
+        }
+        else {
+            const templatePath = path_1.default.join(__dirname, `../../../db/templates/${type}-template.json`);
+            return JSON.parse(fs_1.default.readFileSync(templatePath, "utf-8"));
+        }
     },
     // this is not used yet
     saveReportTemplate: (form) => {

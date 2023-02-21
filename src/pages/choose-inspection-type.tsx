@@ -1,25 +1,26 @@
 import React, { Dispatch, FC, SetStateAction, useState } from "react";
-import { InspectionReport } from "./inspection-report";
-import { Customer, InspectionType, Report } from "../types";
+// import { InspectionReport } from "./inspection-report";
+import { Customer, InspectionType, Report, ReportTEST } from "../types";
+import { InspectionReportTEST } from "./inspection-report-TEST";
 
 interface P_ChooseInspectionType {
   customer: Customer | null,
-  setAddingReport: Dispatch<SetStateAction<boolean>>
+  setEditingReport: Dispatch<SetStateAction<boolean>>
 };
 
-export const ChooseInspectionType: FC<P_ChooseInspectionType> = ({ customer, setAddingReport }): JSX.Element => {
-  const [ report, setReport ] = useState<Report | null>(null);
+export const ChooseInspectionType: FC<P_ChooseInspectionType> = ({ customer, setEditingReport }): JSX.Element => {
+  const [ report, setReport ] = useState<ReportTEST | null>(null);
 
   const getInspection = async (type: InspectionType) => {
-    const report: Report = await window.electronAPI.generateReport(customer, type);
+    const report: ReportTEST = await window.electronAPI.generateReport(customer, type);
     setReport(report);
   };
 
-  if (report) return <InspectionReport { ...{ report, setReport, setAddingReport } }  />;
+  if (report) return <InspectionReportTEST { ...{ report, setReport, setEditingReport } }  />;
 
   return (
     <>
-      <button type="button" onClick={ () => setAddingReport(false) }>Cancel</button>
+      <button type="button" onClick={ () => setEditingReport(false) }>Cancel</button>
 
       <h3>Choose Type:</h3>
       <button type="button" onClick={ () => getInspection(InspectionType.TOWABLE) }>Towable</button>

@@ -8,6 +8,11 @@ exports.isInputType = isInputType;
 ;
 ;
 ;
+;
+;
+;
+;
+///////////////////////////
 var InspectionType;
 (function (InspectionType) {
     InspectionType["TOWABLE"] = "towable";

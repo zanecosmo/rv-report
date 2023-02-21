@@ -35,9 +35,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.App = void 0;
 const react_1 = __importStar(require("react"));
 const customer_1 = require("./customer");
+const choose_inspection_type_1 = require("./choose-inspection-type");
 const App = () => {
     const [customers, setCustomers] = (0, react_1.useState)([]);
     const [customer, setCustomer] = (0, react_1.useState)(null);
+    const [editingReport, setEditingReport] = (0, react_1.useState)(false);
     const getCustomerList = () => __awaiter(void 0, void 0, void 0, function* () {
         const list = yield window.electronAPI.getCustomerList();
         setCustomers(list);
@@ -49,6 +51,9 @@ const App = () => {
         else
             throw Error("INVALID CUSTOMER");
     });
+    const editTemplate = () => {
+        setEditingReport(true);
+    };
     const createNewCustomer = () => {
         setCustomer({
             id: "",
@@ -60,8 +65,11 @@ const App = () => {
         });
     };
     (0, react_1.useEffect)(() => void getCustomerList(), [customer]);
+    if (editingReport)
+        return (react_1.default.createElement(choose_inspection_type_1.ChooseInspectionType, Object.assign({}, { customer: null, setEditingReport })));
     if (customer === null)
         return (react_1.default.createElement(react_1.default.Fragment, null,
+            react_1.default.createElement("button", { type: "button", onClick: () => editTemplate() }, "Edit Template"),
             react_1.default.createElement("button", { type: "button", onClick: () => createNewCustomer() }, "Add Customer"),
             react_1.default.createElement("div", { className: "customer-list" },
                 " Customers:",

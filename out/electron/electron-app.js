@@ -69,6 +69,8 @@ const createWindow = () => {
     }));
     electron_1.ipcMain.handle("save-report", (_event, report) => __awaiter(void 0, void 0, void 0, function* () {
         if (report.customer === null) {
+            console.log("NO CUSTOMER");
+            console.log(report.form);
             utils_1.database.saveReportTemplate(report.form);
             return;
         }

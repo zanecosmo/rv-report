@@ -1,4 +1,4 @@
-import { Category, Customer, Form, InspectionType, Report, Row } from "../../types";
+import { Category, Customer, Form, FormTEST, InspectionType, Report, ReportTEST, Row } from "../../types";
 import { app } from "electron";
 import path from "path";
 import FS from "fs";
@@ -27,11 +27,9 @@ const isError = (error: any): error is NodeJS.ErrnoException => {
 
 const getTemplatePath = (type: string) => {
   return isDev()
-    ? `./db/templates/${type}-template.json`
-    : `../../db/templates/${type}-template.json`
+    ? path.join(dbPath, `${type}-template`)
+    : path.join(dbPath, `${type}-template`);
 };
-
-
 
 export const database = {
   getCustomers: (): Customer[] => {
@@ -46,14 +44,19 @@ export const database = {
   saveCustomerInfo: (customers: Customer[]) => {
     FS.writeFileSync(customerInfoPath, JSON.stringify(customers));
   },
-  getReportTemplate: (type: InspectionType): Form => {
-    return JSON.parse(FS.readFileSync(getTemplatePath(type)).toString());
+  getReportTemplate: (type: InspectionType): FormTEST => {
+    if (FS.existsSync(getTemplatePath(type))) {
+      return JSON.parse(FS.readFileSync(getTemplatePath(type), "utf-8"));
+    } else {
+      const templatePath = path.join(__dirname, `../../../db/templates/${type}-template.json`);
+      return JSON.parse(FS.readFileSync(templatePath, "utf-8"));
+    }
   },
   // this is not used yet
-  saveReportTemplate: (form: Form) => {
+  saveReportTemplate: (form: FormTEST) => {
     FS.writeFileSync(getTemplatePath(form.type), JSON.stringify(form));
   },
-  getReportList: (): Report[] => {
+  getReportList: (): ReportTEST[] => {
     try {
       return JSON.parse(FS.readFileSync(reportsListPath, "utf-8"));
     }
@@ -62,5 +65,5 @@ export const database = {
       else throw error;
     };
   },
-  saveReportList: (reports: Report[]) => FS.writeFileSync(reportsListPath, JSON.stringify(reports))
+  saveReportList: (reports: ReportTEST[]) => FS.writeFileSync(reportsListPath, JSON.stringify(reports))
 };
