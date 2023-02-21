@@ -27,8 +27,8 @@ const isError = (error: any): error is NodeJS.ErrnoException => {
 
 const getTemplatePath = (type: string) => {
   return isDev()
-    ? `./db/templates/${type}-template.json`
-    : `../../db/templates/${type}-template.json`
+    ? path.join(dbPath, `${type}-template`)
+    : path.join(dbPath, `${type}-template`);
 };
 
 export const database = {
@@ -45,7 +45,12 @@ export const database = {
     FS.writeFileSync(customerInfoPath, JSON.stringify(customers));
   },
   getReportTemplate: (type: InspectionType): FormTEST => {
-    return JSON.parse(FS.readFileSync(getTemplatePath(type)).toString());
+    if (FS.existsSync(getTemplatePath(type))) {
+      return JSON.parse(FS.readFileSync(getTemplatePath(type), "utf-8"));
+    } else {
+      const templatePath = path.join(__dirname, `../../../db/templates/${type}-template.json`);
+      return JSON.parse(FS.readFileSync(templatePath, "utf-8"));
+    }
   },
   // this is not used yet
   saveReportTemplate: (form: FormTEST) => {
