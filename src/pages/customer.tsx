@@ -37,8 +37,8 @@ export const CustomerView: FC<P_Customer> = ({ customer, setCustomer }): JSX.Ele
     setCustomer(null);
   };
 
-  if (report) return <InspectionReportTEST { ...{ report, setReport, setAddingReport } } />
-  else if (addingReport) return (<ChooseInspectionType  {...{ customer, setAddingReport } }  />)
+  if (report) return <InspectionReportTEST { ...{ report, setReport, setEditingReport: setAddingReport } } />
+  else if (addingReport) return (<ChooseInspectionType  {...{ customer, setEditingReport: setAddingReport } }  />)
   return (
     <>
       <section>

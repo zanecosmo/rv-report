@@ -5,9 +5,11 @@ interface P_ContentEditableDiv {
   state: FormTEST,
   setState: Dispatch<SetStateAction<FormTEST>>,
   payload: [ number, number | null, string ];
+  isEditable: boolean
 }; 
 
-export const ContentEditableDivTEST: FC<P_ContentEditableDiv> = ({ state, setState, payload }) => {
+export const ContentEditableDivTEST: FC<P_ContentEditableDiv> = (props) => {
+  const { state, setState, payload, isEditable } = props;
   const [ category, row, data ] = payload;
 
   const handleInputChange = (e: FormEvent<HTMLDivElement>) => {
@@ -17,31 +19,6 @@ export const ContentEditableDivTEST: FC<P_ContentEditableDiv> = ({ state, setSta
     else newCategories[category].rows[row][data] = e.currentTarget.innerHTML;
 
     setState({ ...state, categories: newCategories});
-    
-    ///
-
-    // const newRow: RowTEST = {
-    //   ...state.categories[category].rows[row],
-    //   [data]: e.currentTarget.innerHTML
-    // };
-
-    // const newRows: RowTEST[] = state.categories[category].rows.map((r, i) => {
-    //   return i === row ? newRow : r;
-    // });
-
-    // const newCategory: CategoryTEST = {
-    //   ...state.categories[category],
-    //   rows: newRows
-    // };
-
-    // const newCategories: CategoryTEST[] = state.categories.map((c, i) => {
-    //   return i === category ? newCategory : c;
-    // });
-
-    // setState({
-    //   ...state,
-    //   categories: newCategories
-    // });
   };
 
   const innerHTML: string = row === null
@@ -50,7 +27,7 @@ export const ContentEditableDivTEST: FC<P_ContentEditableDiv> = ({ state, setSta
 
   return (
     <div
-      contentEditable={ true }
+      contentEditable={ isEditable }
       onBlur={ handleInputChange }
       dangerouslySetInnerHTML={ { __html: innerHTML } }
       className="textarea-div"

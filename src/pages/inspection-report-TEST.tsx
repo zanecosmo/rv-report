@@ -1,25 +1,33 @@
 import React, { ChangeEvent, Dispatch, FC, SetStateAction, useState } from "react";
-import { Category, CategoryTEST, Customer, FormTEST, InspectionType, Report, ReportTEST } from "../types";
+import { Customer, FormTEST, InspectionType, ReportTEST } from "../types";
 import {jsPDF } from "jspdf";
 import { InspectionFormTEST } from "../components/inspection-form-TEST";
-
 
 export interface P_InspectionReport {
   report: ReportTEST,
   setReport: Dispatch<SetStateAction<ReportTEST | null>>,
-  setAddingReport: Dispatch<SetStateAction<boolean>>
+  setEditingReport: Dispatch<SetStateAction<boolean>>
 };
 
-export const InspectionReportTEST: FC<P_InspectionReport> = ({ report, setReport, setAddingReport }): JSX.Element => {
+export const InspectionReportTEST: FC<P_InspectionReport> = ({ report, setReport, setEditingReport }): JSX.Element => {
   const [ state, setState ] = useState<FormTEST>(report.form);
-  console.log(state);
   const [ RVInfo, setRVInfo ] = useState(report.RVInfo);
 
   const saveForm = async () => {
-    report.RVInfo = RVInfo;
-    await window.electronAPI.saveReport(report);
-    setAddingReport(false);
-    setReport(null);
+    if (report.customer) {
+      report.RVInfo = RVInfo;
+      await window.electronAPI.saveReport(report);
+      setEditingReport(false);
+      setReport(null);
+    }
+    else {
+      console.log("SAVE TEMPLATE PRESSED");
+      report.form = state;
+      console.log(report.form.categories)
+      await window.electronAPI.saveReport(report);
+      setEditingReport(false);
+      setReport(null);
+    }
   };
 
   const saveAsPDF = async () => {
@@ -147,7 +155,7 @@ export const InspectionReportTEST: FC<P_InspectionReport> = ({ report, setReport
 
         </div>
 
-        <InspectionFormTEST { ...{ state, setState, isTemplate: report.customer ? false : true } } />
+        <InspectionFormTEST { ...{ state, setState, isTemplate: !report.customer } } />
 
       </div>
 

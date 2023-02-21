@@ -62,6 +62,8 @@ const createWindow = () => {
 
   ipcMain.handle("save-report", async (_event: IpcMainInvokeEvent, report: ReportTEST): Promise<void> => {
     if (report.customer === null) {
+      console.log("NO CUSTOMER");
+      console.log(report.form);
       database.saveReportTemplate(report.form);
       return;
     };

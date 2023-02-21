@@ -38,15 +38,24 @@ const types_1 = require("../types");
 const jspdf_1 = require("jspdf");
 const inspection_form_TEST_1 = require("../components/inspection-form-TEST");
 ;
-const InspectionReportTEST = ({ report, setReport, setAddingReport }) => {
+const InspectionReportTEST = ({ report, setReport, setEditingReport }) => {
     const [state, setState] = (0, react_1.useState)(report.form);
-    console.log(state);
     const [RVInfo, setRVInfo] = (0, react_1.useState)(report.RVInfo);
     const saveForm = () => __awaiter(void 0, void 0, void 0, function* () {
-        report.RVInfo = RVInfo;
-        yield window.electronAPI.saveReport(report);
-        setAddingReport(false);
-        setReport(null);
+        if (report.customer) {
+            report.RVInfo = RVInfo;
+            yield window.electronAPI.saveReport(report);
+            setEditingReport(false);
+            setReport(null);
+        }
+        else {
+            console.log("SAVE TEMPLATE PRESSED");
+            report.form = state;
+            console.log(report.form.categories);
+            yield window.electronAPI.saveReport(report);
+            setEditingReport(false);
+            setReport(null);
+        }
     });
     const saveAsPDF = () => __awaiter(void 0, void 0, void 0, function* () {
         const report = document.querySelector(".printable-form");
@@ -133,6 +142,6 @@ const InspectionReportTEST = ({ report, setReport, setAddingReport }) => {
                         react_1.default.createElement("input", { type: "text", value: RVInfo, onChange: (e) => setRVInfo(e.target.value) })))),
                 react_1.default.createElement("h3", null, "Report"),
                 react_1.default.createElement("hr", null)),
-            react_1.default.createElement(inspection_form_TEST_1.InspectionFormTEST, Object.assign({}, { state, setState, isTemplate: report.customer ? false : true })))));
+            react_1.default.createElement(inspection_form_TEST_1.InspectionFormTEST, Object.assign({}, { state, setState, isTemplate: !report.customer })))));
 };
 exports.InspectionReportTEST = InspectionReportTEST;
