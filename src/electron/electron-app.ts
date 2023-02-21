@@ -1,5 +1,5 @@
 import path from "path";
-import { Customer, Form, Report } from "../types";
+import { Customer, Form, FormTEST, Report, ReportTEST } from "../types";
 import { app, BrowserWindow, ipcMain, IpcMainInvokeEvent } from "electron";
 import { v4 as uuidv4 } from 'uuid';
 import { database, isDev } from "../utils/back-end/utils";
@@ -47,9 +47,9 @@ const createWindow = () => {
     database.saveCustomerInfo(customers);
   });
 
-  ipcMain.handle("generate-report", async (_event: IpcMainInvokeEvent, customer, type): Promise<Report> => {
-    const form: Form = database.getReportTemplate(type);
-    const report: Report = {
+  ipcMain.handle("generate-report", async (_event: IpcMainInvokeEvent, customer, type): Promise<ReportTEST> => {
+    const form: FormTEST = database.getReportTemplate(type);
+    const report: ReportTEST = {
       id: customer ? uuidv4() : null,
       customer: customer,
       RVInfo: "",
@@ -60,7 +60,7 @@ const createWindow = () => {
     return report;
   });
 
-  ipcMain.handle("save-report", async (_event: IpcMainInvokeEvent, report: Report): Promise<void> => {
+  ipcMain.handle("save-report", async (_event: IpcMainInvokeEvent, report: ReportTEST): Promise<void> => {
     if (report.customer === null) {
       database.saveReportTemplate(report.form);
       return;

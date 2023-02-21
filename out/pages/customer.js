@@ -35,7 +35,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CustomerView = void 0;
 const react_1 = __importStar(require("react"));
 const choose_inspection_type_1 = require("./choose-inspection-type");
-const inspection_report_1 = require("./inspection-report");
+const inspection_report_TEST_1 = require("./inspection-report-TEST");
 ;
 const CustomerView = ({ customer, setCustomer }) => {
     const [isEditing, setIsEditing] = (0, react_1.useState)(customer.id === "" ? true : false);
@@ -62,7 +62,7 @@ const CustomerView = ({ customer, setCustomer }) => {
         setCustomer(null);
     };
     if (report)
-        return react_1.default.createElement(inspection_report_1.InspectionReport, Object.assign({}, { report, setReport, setAddingReport }));
+        return react_1.default.createElement(inspection_report_TEST_1.InspectionReportTEST, Object.assign({}, { report, setReport, setAddingReport }));
     else if (addingReport)
         return (react_1.default.createElement(choose_inspection_type_1.ChooseInspectionType, Object.assign({}, { customer, setAddingReport })));
     return (react_1.default.createElement(react_1.default.Fragment, null,

@@ -1,6 +1,7 @@
 import React, { Dispatch, FC, SetStateAction, useState } from "react";
-import { InspectionReport } from "./inspection-report";
-import { Customer, InspectionType, Report } from "../types";
+// import { InspectionReport } from "./inspection-report";
+import { Customer, InspectionType, Report, ReportTEST } from "../types";
+import { InspectionReportTEST } from "./inspection-report-TEST";
 
 interface P_ChooseInspectionType {
   customer: Customer | null,
@@ -8,14 +9,14 @@ interface P_ChooseInspectionType {
 };
 
 export const ChooseInspectionType: FC<P_ChooseInspectionType> = ({ customer, setAddingReport }): JSX.Element => {
-  const [ report, setReport ] = useState<Report | null>(null);
+  const [ report, setReport ] = useState<ReportTEST | null>(null);
 
   const getInspection = async (type: InspectionType) => {
-    const report: Report = await window.electronAPI.generateReport(customer, type);
+    const report: ReportTEST = await window.electronAPI.generateReport(customer, type);
     setReport(report);
   };
 
-  if (report) return <InspectionReport { ...{ report, setReport, setAddingReport } }  />;
+  if (report) return <InspectionReportTEST { ...{ report, setReport, setAddingReport } }  />;
 
   return (
     <>

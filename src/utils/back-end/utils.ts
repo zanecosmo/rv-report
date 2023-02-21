@@ -1,4 +1,4 @@
-import { Category, Customer, Form, InspectionType, Report, Row } from "../../types";
+import { Category, Customer, Form, FormTEST, InspectionType, Report, ReportTEST, Row } from "../../types";
 import { app } from "electron";
 import path from "path";
 import FS from "fs";
@@ -31,8 +31,6 @@ const getTemplatePath = (type: string) => {
     : `../../db/templates/${type}-template.json`
 };
 
-
-
 export const database = {
   getCustomers: (): Customer[] => {
     try {
@@ -46,14 +44,14 @@ export const database = {
   saveCustomerInfo: (customers: Customer[]) => {
     FS.writeFileSync(customerInfoPath, JSON.stringify(customers));
   },
-  getReportTemplate: (type: InspectionType): Form => {
+  getReportTemplate: (type: InspectionType): FormTEST => {
     return JSON.parse(FS.readFileSync(getTemplatePath(type)).toString());
   },
   // this is not used yet
-  saveReportTemplate: (form: Form) => {
+  saveReportTemplate: (form: FormTEST) => {
     FS.writeFileSync(getTemplatePath(form.type), JSON.stringify(form));
   },
-  getReportList: (): Report[] => {
+  getReportList: (): ReportTEST[] => {
     try {
       return JSON.parse(FS.readFileSync(reportsListPath, "utf-8"));
     }
@@ -62,5 +60,5 @@ export const database = {
       else throw error;
     };
   },
-  saveReportList: (reports: Report[]) => FS.writeFileSync(reportsListPath, JSON.stringify(reports))
+  saveReportList: (reports: ReportTEST[]) => FS.writeFileSync(reportsListPath, JSON.stringify(reports))
 };

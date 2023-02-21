@@ -22,6 +22,36 @@ export interface Row {
   notes: string
 };
 
+///////////////////////////
+
+export interface RowTEST extends Record<string, string | boolean> {
+  lineItem: string,
+  pass: boolean,
+  fail: boolean,
+  notes: string
+};
+
+export interface CategoryTEST extends Record<string, string | RowTEST[]> {
+  categoryName: string,
+  rows: RowTEST[],
+  notes: string
+};
+
+export interface FormTEST {
+  type: InspectionType,
+  categories: CategoryTEST[]
+};
+
+export interface ReportTEST {
+  id: string | null,
+  RVInfo: string,
+  customer: Customer | null,
+  dateCreated: Date | null,
+  form: FormTEST
+};
+
+///////////////////////////
+
 export enum InspectionType {
   TOWABLE = "towable",
   MOTORHOME = "motorhome"
@@ -52,13 +82,12 @@ export interface Report {
 export type ReactState<T> = [T, React.Dispatch<React.SetStateAction<T>>];
 
 export interface IElectronAPI {
-  getTableRow: (type: string) => Form,
   getCustomerList: () => Customer[],
   saveCustomerInfo: (customer: Customer) => Promise<string | undefined>,
   deleteCustomer: (id: string) => void,
-  generateReport: (customer: Customer | null, type: InspectionType) => Promise<Report>,
-  getReportList: (id: string) => Promise<Report[]>,
-  saveReport: (report: Report) => void,
+  generateReport: (customer: Customer | null, type: InspectionType) => Promise<ReportTEST>,
+  getReportList: (id: string) => Promise<ReportTEST[]>,
+  saveReport: (report: ReportTEST) => void,
   deleteReport: (id: string) => void
 };
 
