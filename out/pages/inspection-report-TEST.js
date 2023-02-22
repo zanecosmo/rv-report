@@ -41,16 +41,18 @@ const negate_button_1 = require("../components/negate-button");
 const back_button_1 = require("../components/back-button");
 const save_button_1 = require("../components/save-button");
 const save_as_pdf_button_1 = require("../components/save-as-pdf-button");
+const edit_button_1 = require("../components/edit-button");
 ;
 const InspectionReportTEST = ({ report, setReport, setEditingReport }) => {
     const [state, setState] = (0, react_1.useState)(report.form);
     const [RVInfo, setRVInfo] = (0, react_1.useState)(report.RVInfo);
+    const [isEditing, setIsEditing] = (0, react_1.useState)(false);
     const saveForm = () => __awaiter(void 0, void 0, void 0, function* () {
         if (report.customer) {
             report.RVInfo = RVInfo;
             yield window.electronAPI.saveReport(report);
-            setEditingReport(false);
-            setReport(null);
+            setIsEditing(false);
+            // setReport(null);
         }
         else {
             console.log("SAVE TEMPLATE PRESSED");
@@ -131,24 +133,35 @@ const InspectionReportTEST = ({ report, setReport, setEditingReport }) => {
         customer.phone !== "" && react_1.default.createElement("div", null, customer.phone),
         customer.email !== "" && react_1.default.createElement("div", null, customer.email),
         customer.address !== "" && react_1.default.createElement("div", null, customer.address)));
+    console.log(isEditing);
     return (react_1.default.createElement("div", null,
-        react_1.default.createElement("div", { className: "toolbar" },
-            react_1.default.createElement(back_button_1.BackButton, { onClick: () => setReport(null) }),
-            react_1.default.createElement(save_button_1.SaveButton, { onClick: () => saveForm() }),
-            report.customer && react_1.default.createElement(save_as_pdf_button_1.SaveAsPDFButton, { onClick: () => saveAsPDF() }),
-            report.customer && react_1.default.createElement(negate_button_1.NegateButton, { onClick: () => deleteReport(), text: "Delete" })),
+        react_1.default.createElement("div", { className: "toolbar" }, !report.customer
+            ? (react_1.default.createElement(react_1.default.Fragment, null,
+                react_1.default.createElement(negate_button_1.NegateButton, { onClick: () => setEditingReport(false), text: "Cancel" }),
+                react_1.default.createElement(save_button_1.SaveButton, { onClick: () => saveForm() })))
+            : (react_1.default.createElement(react_1.default.Fragment, null, isEditing
+                ? (react_1.default.createElement(react_1.default.Fragment, null,
+                    react_1.default.createElement(save_button_1.SaveButton, { onClick: () => saveForm() }),
+                    react_1.default.createElement(negate_button_1.NegateButton, { onClick: () => setIsEditing(false), text: "Cancel" })))
+                : (react_1.default.createElement(react_1.default.Fragment, null,
+                    react_1.default.createElement(back_button_1.BackButton, { onClick: () => setReport(null) }),
+                    react_1.default.createElement(edit_button_1.EditButton, { onClick: () => setIsEditing(true), text: "Edit Report" }),
+                    react_1.default.createElement(save_as_pdf_button_1.SaveAsPDFButton, { onClick: () => saveAsPDF() }),
+                    react_1.default.createElement(negate_button_1.NegateButton, { onClick: () => deleteReport(), text: "Delete" })))))),
         react_1.default.createElement("div", { className: "printable-form" },
             react_1.default.createElement("div", { className: "report-header" },
-                report.customer && (react_1.default.createElement(react_1.default.Fragment, null,
-                    react_1.default.createElement("h1", null, "On The Spot Mobile RV and Trailer Service"),
-                    react_1.default.createElement("h3", null, reportTitle),
-                    createCustomerInfoSection(report.customer),
-                    react_1.default.createElement("section", null,
-                        react_1.default.createElement("hr", null),
-                        react_1.default.createElement("h3", null, "Rv Info"),
-                        react_1.default.createElement("input", { className: "rv-info", type: "text", value: RVInfo, onChange: (e) => setRVInfo(e.target.value) })))),
+                report.customer
+                    ? (react_1.default.createElement(react_1.default.Fragment, null,
+                        react_1.default.createElement("h1", null, "On The Spot Mobile RV and Trailer Service"),
+                        react_1.default.createElement("h3", null, reportTitle),
+                        createCustomerInfoSection(report.customer),
+                        react_1.default.createElement("section", null,
+                            react_1.default.createElement("hr", null),
+                            react_1.default.createElement("h3", null, "Rv Info"),
+                            react_1.default.createElement("input", { className: "rv-info", type: "text", value: RVInfo, onChange: (e) => setRVInfo(e.target.value) }))))
+                    : (react_1.default.createElement(react_1.default.Fragment, null, reportTitle)),
                 react_1.default.createElement("hr", null),
                 react_1.default.createElement("h3", null, "Report")),
-            react_1.default.createElement(inspection_form_TEST_1.InspectionFormTEST, Object.assign({}, { state, setState, isTemplate: !report.customer })))));
+            react_1.default.createElement(inspection_form_TEST_1.InspectionFormTEST, Object.assign({}, { state, setState, isTemplate: !report.customer, editable: isEditing })))));
 };
 exports.InspectionReportTEST = InspectionReportTEST;

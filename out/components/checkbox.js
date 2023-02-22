@@ -6,9 +6,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CheckBox = void 0;
 const react_1 = __importDefault(require("react"));
 ;
-const CheckBox = ({ state, setState, payload }) => {
+const CheckBox = ({ state, setState, payload, editable }) => {
     const [category, row, data] = payload;
     const handleCheckboxChange = (e) => {
+        if (!editable)
+            return;
         const newCategories = state.categories.map(c => c);
         newCategories[category].rows[row][data] = e.target.checked;
         setState(Object.assign(Object.assign({}, state), { categories: newCategories }));

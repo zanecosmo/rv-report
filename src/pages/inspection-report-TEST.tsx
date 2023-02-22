@@ -6,6 +6,7 @@ import { NegateButton } from "../components/negate-button";
 import { BackButton } from "../components/back-button";
 import { SaveButton } from "../components/save-button";
 import { SaveAsPDFButton } from "../components/save-as-pdf-button";
+import { EditButton } from "../components/edit-button";
 
 export interface P_InspectionReport {
   report: ReportTEST,
@@ -16,13 +17,14 @@ export interface P_InspectionReport {
 export const InspectionReportTEST: FC<P_InspectionReport> = ({ report, setReport, setEditingReport }): JSX.Element => {
   const [ state, setState ] = useState<FormTEST>(report.form);
   const [ RVInfo, setRVInfo ] = useState(report.RVInfo);
+  const [ isEditing, setIsEditing ] = useState(false);
 
   const saveForm = async () => {
     if (report.customer) {
       report.RVInfo = RVInfo;
       await window.electronAPI.saveReport(report);
-      setEditingReport(false);
-      setReport(null);
+      setIsEditing(false);
+      // setReport(null);
     }
     else {
       console.log("SAVE TEMPLATE PRESSED");
@@ -125,45 +127,68 @@ export const InspectionReportTEST: FC<P_InspectionReport> = ({ report, setReport
     </section>
   );
   
+    console.log(isEditing);
+
   return (
     <div>
 
       <div className="toolbar">
-        <BackButton onClick={ () => setReport(null) } />
-        <SaveButton onClick={ () => saveForm() } />
-        { report.customer && <SaveAsPDFButton onClick={ () => saveAsPDF() } /> }
-        { report.customer && <NegateButton onClick={ () => deleteReport() } text="Delete" /> }
+        { !report.customer
+          ? (<>
+              <NegateButton onClick={ () => setEditingReport(false) } text="Cancel" />
+              <SaveButton onClick={ () => saveForm() } />
+            </>)
+          : (<>
+              { isEditing
+                ? (
+                    <>
+                      <SaveButton onClick={ () => saveForm() } />
+                      <NegateButton onClick={ () => setIsEditing(false) } text="Cancel" />
+                    </>
+                  ) 
+                : (
+                    <>
+                      <BackButton onClick={ () => setReport(null) } />
+                      <EditButton onClick={ () => setIsEditing(true) } text="Edit Report" />
+                      <SaveAsPDFButton onClick={ () => saveAsPDF() } />
+                      <NegateButton onClick={ () => deleteReport() } text="Delete" />
+                    </>      
+                  )
+              }
+            </>)
+        }
       </div>
 
       <div className="printable-form">
 
         <div className="report-header">
 
-          { report.customer && (
-            <>
-              <h1>On The Spot Mobile RV and Trailer Service</h1>
-              <h3>{ reportTitle }</h3>
+          { report.customer
+            ? (<>
+                <h1>On The Spot Mobile RV and Trailer Service</h1>
+                <h3>{ reportTitle }</h3>
 
-              { createCustomerInfoSection(report.customer) }
+                { createCustomerInfoSection(report.customer) }
 
-              <section>
-                <hr></hr>
-                <h3>Rv Info</h3>
-                <input className="rv-info"
-                  type="text"
-                  value={ RVInfo }
-                  onChange={ (e: ChangeEvent<HTMLInputElement>) => setRVInfo(e.target.value) }
-                />
-              </section>
-            </>
-          ) }
+                <section>
+                  <hr></hr>
+                  <h3>Rv Info</h3>
+                    <input className="rv-info"
+                    type="text"
+                    value={ RVInfo }
+                    onChange={ (e: ChangeEvent<HTMLInputElement>) => setRVInfo(e.target.value) }
+                  />
+                </section>
+              </>)
+            : (<>{ reportTitle }</>)
+          }
 
           <hr></hr>
           <h3>Report</h3>
 
         </div>
 
-        <InspectionFormTEST { ...{ state, setState, isTemplate: !report.customer } } />
+        <InspectionFormTEST { ...{ state, setState, isTemplate: !report.customer, editable: isEditing } } />
 
       </div>
 

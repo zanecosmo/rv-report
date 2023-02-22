@@ -11,7 +11,8 @@ const x_button_1 = require("./x-button");
 const add_button_1 = require("./add-button");
 const minus_button_1 = require("./minus-button");
 ;
-const InspectionFormTEST = ({ state, setState, isTemplate }) => {
+const InspectionFormTEST = (props) => {
+    const { state, setState, isTemplate, editable } = props;
     const addCategory = (categoryIndex) => {
         const newCategories = state.categories.map(c => c);
         newCategories.splice(categoryIndex, 0, {
@@ -90,21 +91,21 @@ const InspectionFormTEST = ({ state, setState, isTemplate }) => {
                             state,
                             setState,
                             payload: [categoryIndex, rowIndex, "pass"],
-                            isEditable: isTemplate
+                            editable: isTemplate || editable
                         }))),
                     react_1.default.createElement("td", { className: "pass-fail" },
                         react_1.default.createElement(checkbox_1.CheckBox, Object.assign({}, {
                             state,
                             setState,
                             payload: [categoryIndex, rowIndex, "fail"],
-                            isEditable: isTemplate
+                            editable: isTemplate || editable
                         }))),
                     react_1.default.createElement("td", { className: "line-item-notes" },
                         react_1.default.createElement(content_editable_div_TEST_1.ContentEditableDivTEST, Object.assign({}, {
                             state,
                             setState,
                             payload: [categoryIndex, rowIndex, "notes"],
-                            isEditable: true
+                            isEditable: isTemplate || editable
                         })),
                         isTemplate && (react_1.default.createElement(minus_button_1.MinusButton, { onClick: () => deleteLineItem(categoryIndex, rowIndex) })))))),
                 isTemplate && (react_1.default.createElement("tr", null,
@@ -117,7 +118,7 @@ const InspectionFormTEST = ({ state, setState, isTemplate }) => {
                             state,
                             setState,
                             payload: [categoryIndex, null, "notes"],
-                            isEditable: true
+                            isEditable: isTemplate || editable
                         }))))));
         })));
 };

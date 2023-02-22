@@ -1,20 +1,20 @@
-import React, { ChangeEvent, Dispatch, FC, SetStateAction } from "react";
-import { ContentEditableDiv } from "./content-editable-div";
-import { Category, CategoryTEST, Form, FormTEST, RowTEST } from "../types";
+import React, { Dispatch, FC, SetStateAction } from "react";
+import { FormTEST } from "../types";
 import { ContentEditableDivTEST } from "./content-editable-div-TEST";
 import { CheckBox } from "./checkbox";
 import { XButton } from "./x-button";
-import { NegateButton } from "./negate-button";
 import { AddButton } from "./add-button";
 import { MinusButton } from "./minus-button";
 
 export interface P_InspectionForm {
   state: FormTEST,
   setState: Dispatch<SetStateAction<FormTEST>>,
-  isTemplate: boolean
+  isTemplate: boolean,
+  editable: boolean,
 };
 
-export const InspectionFormTEST: FC<P_InspectionForm> = ({ state, setState, isTemplate }): JSX.Element => {
+export const InspectionFormTEST: FC<P_InspectionForm> = (props): JSX.Element => {
+  const { state, setState, isTemplate, editable } = props;
 
   const addCategory = (categoryIndex: number) => {
     const newCategories = state.categories.map(c => c);
@@ -134,7 +134,7 @@ export const InspectionFormTEST: FC<P_InspectionForm> = ({ state, setState, isTe
                     state,
                     setState,
                     payload: [ categoryIndex, rowIndex, "pass" ],
-                    isEditable: isTemplate
+                    editable: isTemplate || editable
                   } } />
                 </td>
             
@@ -143,7 +143,7 @@ export const InspectionFormTEST: FC<P_InspectionForm> = ({ state, setState, isTe
                     state,
                     setState,
                     payload: [ categoryIndex, rowIndex, "fail" ],
-                    isEditable: isTemplate
+                    editable: isTemplate || editable
                   } } />
                 </td>
             
@@ -152,7 +152,7 @@ export const InspectionFormTEST: FC<P_InspectionForm> = ({ state, setState, isTe
                     state,
                     setState,
                     payload: [ categoryIndex, rowIndex, "notes" ],
-                    isEditable: true  
+                    isEditable: isTemplate || editable
                   } } />
                   { isTemplate && (
                     <MinusButton onClick={ () => deleteLineItem(categoryIndex, rowIndex) } />
@@ -176,7 +176,7 @@ export const InspectionFormTEST: FC<P_InspectionForm> = ({ state, setState, isTe
                 state,
                 setState,
                 payload: [ categoryIndex, null, "notes" ],
-                isEditable: true
+                isEditable: isTemplate || editable
               }} />
             </td>
           </tr>
