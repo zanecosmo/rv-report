@@ -36,6 +36,8 @@ exports.App = void 0;
 const react_1 = __importStar(require("react"));
 const customer_1 = require("./customer");
 const choose_inspection_type_1 = require("./choose-inspection-type");
+const add_button_1 = require("../components/add-button");
+const edit_button_1 = require("../components/edit-button");
 const App = () => {
     const [customers, setCustomers] = (0, react_1.useState)([]);
     const [customer, setCustomer] = (0, react_1.useState)(null);
@@ -69,8 +71,9 @@ const App = () => {
         return (react_1.default.createElement(choose_inspection_type_1.ChooseInspectionType, Object.assign({}, { customer: null, setEditingReport })));
     if (customer === null)
         return (react_1.default.createElement(react_1.default.Fragment, null,
-            react_1.default.createElement("button", { type: "button", onClick: () => editTemplate() }, "Edit Template"),
-            react_1.default.createElement("button", { type: "button", onClick: () => createNewCustomer() }, "Add Customer"),
+            react_1.default.createElement("div", { className: "toolbar" },
+                react_1.default.createElement(edit_button_1.EditButton, { onClick: () => editTemplate(), text: "Edit Template" }),
+                react_1.default.createElement(add_button_1.AddButton, { onClick: () => createNewCustomer(), text: "Add Customer" })),
             react_1.default.createElement("div", { className: "customer-list" },
                 " Customers:",
                 customers && customers.map((customer) => {

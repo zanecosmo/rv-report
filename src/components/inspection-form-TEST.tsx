@@ -3,6 +3,10 @@ import { ContentEditableDiv } from "./content-editable-div";
 import { Category, CategoryTEST, Form, FormTEST, RowTEST } from "../types";
 import { ContentEditableDivTEST } from "./content-editable-div-TEST";
 import { CheckBox } from "./checkbox";
+import { XButton } from "./x-button";
+import { NegateButton } from "./negate-button";
+import { AddButton } from "./add-button";
+import { MinusButton } from "./minus-button";
 
 export interface P_InspectionForm {
   state: FormTEST,
@@ -16,7 +20,7 @@ export const InspectionFormTEST: FC<P_InspectionForm> = ({ state, setState, isTe
     const newCategories = state.categories.map(c => c);
 
     newCategories.splice(categoryIndex, 0, {
-      categoryName: "",
+      categoryName: "New Category",
       rows: [],
       notes: ""
     });
@@ -54,8 +58,8 @@ export const InspectionFormTEST: FC<P_InspectionForm> = ({ state, setState, isTe
       <thead>
         <tr>
           <th>List Item</th>
-          <th>Passed</th>
-          <th>Failed</th>
+          <th>Pass</th>
+          <th>Fail</th>
           <th>Notes</th>
         </tr>
       </thead>
@@ -71,14 +75,18 @@ export const InspectionFormTEST: FC<P_InspectionForm> = ({ state, setState, isTe
             { isTemplate && (
               <>
                 <tr>
+                  <td className="spacer" colSpan={ 4 }> </td>
+                </tr>
+                <tr>
+                  <td className="spacer" colSpan={ 4 }> </td>
+                </tr>
+                <tr>
                   <td colSpan={ 4 }>
-                    <button
-                      type="button"
-                      onClick={ () => addCategory(categoryIndex) }
-                    >
-                      + NEW CATEGORY
-                    </button>
+                    <AddButton onClick={ () => addCategory(categoryIndex) } text="New Category" />
                   </td>
+                </tr>
+                <tr>
+                  <td className="spacer" colSpan={ 4 }> </td>
                 </tr>
                 <tr>
                   <td className="spacer" colSpan={ 4 }> </td>
@@ -86,6 +94,19 @@ export const InspectionFormTEST: FC<P_InspectionForm> = ({ state, setState, isTe
               </>
             ) }
         
+            { isTemplate && (
+              <>
+                <tr>
+                  <td className="spacer" colSpan={ 4 }> </td>
+                </tr>
+                <tr>
+                  <td className="spacer">
+                    <XButton onClick={ () => deleteCategory(categoryIndex) } />
+                  </td>
+                </tr>
+              </>
+              ) }
+
             <tr>
               <th className="line-item-notes" colSpan={ 4 }>
                 <ContentEditableDivTEST { ...{
@@ -94,9 +115,6 @@ export const InspectionFormTEST: FC<P_InspectionForm> = ({ state, setState, isTe
                   payload: [ categoryIndex, null, "categoryName" ],
                   isEditable: isTemplate
                 } } />
-                { isTemplate && (
-                  <button type="button" onClick={ () => deleteCategory(categoryIndex) }>- DELETE CATEGORY</button>
-                ) }
               </th>
             </tr>
         
@@ -137,12 +155,7 @@ export const InspectionFormTEST: FC<P_InspectionForm> = ({ state, setState, isTe
                     isEditable: true  
                   } } />
                   { isTemplate && (
-                    <button
-                      type="button"
-                      onClick={ () => deleteLineItem(categoryIndex, rowIndex) }
-                    >
-                      - DELETE LINE-ITEM
-                    </button>
+                    <MinusButton onClick={ () => deleteLineItem(categoryIndex, rowIndex) } />
                   ) }
                 </td>
               </tr>
@@ -151,12 +164,7 @@ export const InspectionFormTEST: FC<P_InspectionForm> = ({ state, setState, isTe
           { isTemplate && (
             <tr>
               <td colSpan={ 4 }>
-                <button
-                  type="button"
-                  onClick={ () => addLineItem(categoryIndex) }
-                >
-                  + NEW LINE-ITEM
-                </button>
+                <AddButton onClick={ () => addLineItem(categoryIndex) } text="Add Line Item" />
               </td>
             </tr>
           ) }

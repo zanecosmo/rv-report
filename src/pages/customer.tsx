@@ -3,6 +3,11 @@ import { ChooseInspectionType } from "./choose-inspection-type";
 // import { InspectionReport } from "./inspection-report";
 import { Customer, Report, ReportTEST } from "../types";
 import { InspectionReportTEST } from "./inspection-report-TEST";
+import { BackButton } from "../components/back-button";
+import { EditButton } from "../components/edit-button";
+import { NegateButton } from "../components/negate-button";
+import { SaveButton } from "../components/save-button";
+import { AddButton } from "../components/add-button";
 
 export interface P_Customer {
   customer: Customer,
@@ -42,20 +47,21 @@ export const CustomerView: FC<P_Customer> = ({ customer, setCustomer }): JSX.Ele
   return (
     <>
       <section>
-        { isEditing
-          ? (<>
-              <button type="button" onClick={ saveCustomer }>Save</button>
-              <button type="button" onClick={ () => customer.id === "" ? setCustomer(null) : setIsEditing(false) }>Cancel</button>
-            </>)
-          : (<>
-              <button type="button" onClick={ () => setIsEditing(true) }>Edit Customer</button>
-              <button type="button" onClick={ () => setCustomer(null) }>Back</button>
-              <button type="button" onClick={ deleteCustomer }>Delete Customer</button>
+        <div className="toolbar">
+          { isEditing
+            ? (<>
+                <NegateButton onClick={ () => customer.id === "" ? setCustomer(null) : setIsEditing(false) } text="Cancel" />
+                <SaveButton onClick={ saveCustomer } />
+              </>)
+            : (<>
+                <BackButton onClick={ () => setCustomer(null) } />
+                <EditButton onClick={ () => setIsEditing(true) } text="Edit" />
+                <NegateButton onClick={ deleteCustomer } text="Delete" />
+              </>) }
+        </div>
 
-            </>) }
-
-        <h3>Customer Info</h3>
         <hr />
+        <h3>Customer Info</h3>
 
         <label htmlFor="firstName">First Name</label>
         <input
@@ -102,10 +108,15 @@ export const CustomerView: FC<P_Customer> = ({ customer, setCustomer }): JSX.Ele
           readOnly={ !isEditing }
         />
       </section>
+
       <section>
         { !isEditing && (
           <>
-            <button type="button" onClick={ () => setAddingReport(true) }>Add Report</button>
+            <div className="reports-header">
+              <h3>Reports:</h3>
+              <AddButton onClick={ () => setAddingReport(true) }  text="Add Report" />
+            </div>
+
             { reports.length === 0
               ? <div>NO REPORTS</div>
               : reports.map(report => {
@@ -113,7 +124,7 @@ export const CustomerView: FC<P_Customer> = ({ customer, setCustomer }): JSX.Ele
                   <div className="report" key={ report.id }
                     onClick={ () => setReport(report) }
                   >
-                    { `${ report.form.type } ${ report.dateCreated }` }
+                    { `${ report.dateCreated } ${ report.RVInfo }` }
                   </div>
                 )
               }) }

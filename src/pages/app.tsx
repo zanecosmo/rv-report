@@ -2,6 +2,8 @@ import React, { FC, useEffect, useState } from "react";
 import { CustomerView } from "./customer";
 import { Customer } from "../types";
 import { ChooseInspectionType } from "./choose-inspection-type";
+import { AddButton } from "../components/add-button";
+import { EditButton } from "../components/edit-button";
 
 export const App: FC = (): JSX.Element => {
   const [ customers, setCustomers ] = useState<Customer[]>([]);
@@ -42,8 +44,11 @@ export const App: FC = (): JSX.Element => {
 
   if (customer === null) return (
     <>
-      <button type="button" onClick={() => editTemplate()}>Edit Template</button>
-      <button type="button" onClick={() => createNewCustomer()}>Add Customer</button>
+      <div className="toolbar">
+        <EditButton onClick={ () => editTemplate() } text="Edit Template" />
+        <AddButton onClick={ () => createNewCustomer() } text="Add Customer" />
+      </div>
+      
       <div className="customer-list"> Customers:
         {customers && customers.map((customer: Customer) => {
           return (

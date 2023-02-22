@@ -36,6 +36,11 @@ exports.CustomerView = void 0;
 const react_1 = __importStar(require("react"));
 const choose_inspection_type_1 = require("./choose-inspection-type");
 const inspection_report_TEST_1 = require("./inspection-report-TEST");
+const back_button_1 = require("../components/back-button");
+const edit_button_1 = require("../components/edit-button");
+const negate_button_1 = require("../components/negate-button");
+const save_button_1 = require("../components/save-button");
+const add_button_1 = require("../components/add-button");
 ;
 const CustomerView = ({ customer, setCustomer }) => {
     const [isEditing, setIsEditing] = (0, react_1.useState)(customer.id === "" ? true : false);
@@ -67,16 +72,16 @@ const CustomerView = ({ customer, setCustomer }) => {
         return (react_1.default.createElement(choose_inspection_type_1.ChooseInspectionType, Object.assign({}, { customer, setEditingReport: setAddingReport })));
     return (react_1.default.createElement(react_1.default.Fragment, null,
         react_1.default.createElement("section", null,
-            isEditing
+            react_1.default.createElement("div", { className: "toolbar" }, isEditing
                 ? (react_1.default.createElement(react_1.default.Fragment, null,
-                    react_1.default.createElement("button", { type: "button", onClick: saveCustomer }, "Save"),
-                    react_1.default.createElement("button", { type: "button", onClick: () => customer.id === "" ? setCustomer(null) : setIsEditing(false) }, "Cancel")))
+                    react_1.default.createElement(negate_button_1.NegateButton, { onClick: () => customer.id === "" ? setCustomer(null) : setIsEditing(false), text: "Cancel" }),
+                    react_1.default.createElement(save_button_1.SaveButton, { onClick: saveCustomer })))
                 : (react_1.default.createElement(react_1.default.Fragment, null,
-                    react_1.default.createElement("button", { type: "button", onClick: () => setIsEditing(true) }, "Edit Customer"),
-                    react_1.default.createElement("button", { type: "button", onClick: () => setCustomer(null) }, "Back"),
-                    react_1.default.createElement("button", { type: "button", onClick: deleteCustomer }, "Delete Customer"))),
-            react_1.default.createElement("h3", null, "Customer Info"),
+                    react_1.default.createElement(back_button_1.BackButton, { onClick: () => setCustomer(null) }),
+                    react_1.default.createElement(edit_button_1.EditButton, { onClick: () => setIsEditing(true), text: "Edit" }),
+                    react_1.default.createElement(negate_button_1.NegateButton, { onClick: deleteCustomer, text: "Delete" })))),
             react_1.default.createElement("hr", null),
+            react_1.default.createElement("h3", null, "Customer Info"),
             react_1.default.createElement("label", { htmlFor: "firstName" }, "First Name"),
             react_1.default.createElement("input", { type: "text", name: "firstName", value: customer.firstName, onChange: handleChange, readOnly: !isEditing }),
             react_1.default.createElement("label", { htmlFor: "lastName" }, "Last Name"),
@@ -88,11 +93,13 @@ const CustomerView = ({ customer, setCustomer }) => {
             react_1.default.createElement("label", { htmlFor: "email" }, "Email"),
             react_1.default.createElement("input", { type: "text", name: "email", value: customer.email, onChange: handleChange, readOnly: !isEditing })),
         react_1.default.createElement("section", null, !isEditing && (react_1.default.createElement(react_1.default.Fragment, null,
-            react_1.default.createElement("button", { type: "button", onClick: () => setAddingReport(true) }, "Add Report"),
+            react_1.default.createElement("div", { className: "reports-header" },
+                react_1.default.createElement("h3", null, "Reports:"),
+                react_1.default.createElement(add_button_1.AddButton, { onClick: () => setAddingReport(true), text: "Add Report" })),
             reports.length === 0
                 ? react_1.default.createElement("div", null, "NO REPORTS")
                 : reports.map(report => {
-                    return (react_1.default.createElement("div", { className: "report", key: report.id, onClick: () => setReport(report) }, `${report.form.type} ${report.dateCreated}`));
+                    return (react_1.default.createElement("div", { className: "report", key: report.id, onClick: () => setReport(report) }, `${report.dateCreated} ${report.RVInfo}`));
                 }))))));
 };
 exports.CustomerView = CustomerView;

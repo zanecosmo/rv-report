@@ -2,6 +2,10 @@ import React, { ChangeEvent, Dispatch, FC, SetStateAction, useState } from "reac
 import { Customer, FormTEST, InspectionType, ReportTEST } from "../types";
 import {jsPDF } from "jspdf";
 import { InspectionFormTEST } from "../components/inspection-form-TEST";
+import { NegateButton } from "../components/negate-button";
+import { BackButton } from "../components/back-button";
+import { SaveButton } from "../components/save-button";
+import { SaveAsPDFButton } from "../components/save-as-pdf-button";
 
 export interface P_InspectionReport {
   report: ReportTEST,
@@ -108,8 +112,8 @@ export const InspectionReportTEST: FC<P_InspectionReport> = ({ report, setReport
 
   const createCustomerInfoSection = (customer: Customer) => (
     <section>
-      <h3>Customer Info</h3>
       <hr></hr>
+      <h3>Customer Info</h3>
 
       <div>{ `${customer.firstName}${customer.lastName ? ` ${customer.lastName}` : ""}` }</div>
       {customer.phone !== "" && <div>{ customer.phone }</div>}
@@ -122,10 +126,12 @@ export const InspectionReportTEST: FC<P_InspectionReport> = ({ report, setReport
   return (
     <div>
 
-      <button type="button" onClick={ () => setReport(null) }>Back</button>
-      <button type="button" onClick={ () => saveForm() }>Save</button>
-      {report.customer && <button type="button" onClick={ () => deleteReport() }>Delete</button>}
-      {report.customer && <button type="button" onClick={ () => saveAsPDF() }>Save as PDF</button>}
+      <div className="toolbar">
+        <BackButton onClick={ () => setReport(null) } />
+        <SaveButton onClick={ () => saveForm() } />
+        { report.customer && <SaveAsPDFButton onClick={ () => saveAsPDF() } /> }
+        { report.customer && <NegateButton onClick={ () => deleteReport() } text="Delete" /> }
+      </div>
 
       <div className="printable-form">
 
@@ -139,8 +145,8 @@ export const InspectionReportTEST: FC<P_InspectionReport> = ({ report, setReport
               { createCustomerInfoSection(report.customer) }
 
               <section>
-                <h3>Rv Info</h3>
                 <hr></hr>
+                <h3>Rv Info</h3>
                 <input
                   type="text"
                   value={ RVInfo }
@@ -150,8 +156,8 @@ export const InspectionReportTEST: FC<P_InspectionReport> = ({ report, setReport
             </>
           ) }
 
-          <h3>Report</h3>
           <hr></hr>
+          <h3>Report</h3>
 
         </div>
 

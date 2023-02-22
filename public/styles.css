@@ -1,4 +1,3 @@
-
 @font-face {
   font-family: "Consolas";
   src: url("./fonts/CONSOLA.TTF");
@@ -7,6 +6,8 @@
 :root {
   --form-width: 800px;
   --font-color: #303030;
+  --button-font-color: #ffffff;
+  --button-color: #303030
 }
 
 * {
@@ -16,8 +17,10 @@
   margin: 0;
 }
 
-body {
-  padding-left: calc(50vw - var(--form-width) / 2);
+#root {
+  width: var(--form-width);
+  min-width: var(--form-width);
+  margin-left: calc(50vw - var(--form-width) / 2);
 }
 
 h1 {
@@ -36,7 +39,7 @@ hr {
   width: var(--form-width);
   border: none;
   border-top: 2px dotted black;
-  margin-bottom: 16px;
+  margin-top: 16px;
 }
 
 section {
@@ -66,12 +69,12 @@ table {
 }
 
 .spacer {
-  height: 16px;
+  min-height: 16px;
   border: none;
 }
 
 .pass-fail {
-  width: 80px;
+  width: 54px;
 }
 
 .checkbox, .checkbox input, .checkbox .overlay {
@@ -84,19 +87,19 @@ table {
 
 .icon-container {
   position: absolute;
-  top: calc(50% - 9px);
-  left: calc(50% - 9px);
-  height: 18px;
-  width: 18px;
+  top: calc(50% - 12px);
+  left: calc(50% - 12px);
+  height: 24px;
+  width: 24px;
 }
 
 .icon {
   position: absolute;
-  top: 4px;
-  left: 2px;
+  top: 5px;
+  left: 3px;
   transform: rotate(-50deg);
-  height: 6px;
-  width: 12px;
+  height: 9px;
+  width: 18px;
   border-bottom: 3.5px solid black;
   border-left: 3.5px solid black;
 }
@@ -120,14 +123,13 @@ th {
   text-align: start;
 }
 
-.line-item-notes { /* resize none, and make this element a textarea? */
-  width: 200px;
+.line-item-notes {
   max-width: 200px;
 }
 
 .category-notes {
-  width: 800px;
-  max-width: 800px;
+  width: var(--form-width);
+  max-width: var(--form-width);
 }
 
 .textarea-div {
@@ -144,16 +146,61 @@ th, td {
 }
 
 button {
-  margin: 4px;
+  margin-right: 8px;
   padding: 8px;
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  background-color: #e9e9e9;
+  color: var(--button-font-color);
+  background-color: var(--button-color);
 }
 
 button:hover {
-  background-color: lightgray;
+  background-color: #3d3d3d;
+}
+
+button.delete {
+  background-color: #c42222;
+}
+
+button.delete:hover {
+  background-color: #c42222;
+}
+
+button.delete.round {
+  border: 2px solid #c42222;
+  background-color: #ffffff;
+  height: 24px;
+  width: 24px;
+  border-radius: 50px;
+}
+
+button.delete.round:hover {
+  /* background-color: #e7e7e7; */
+  border: 3px solid #c42222;
+  outline: 2px solid #c42222;
+}
+
+button.minus {
+  position: absolute;
+  top: 1px;
+  right: -36px;
+  border: 2px solid #c42222;
+  background-color: #ffffff;
+  border-radius: 50px;
+  width: 20px;
+  height: 20px;
+}
+
+button.minus:hover {
+  border: 3px solid #c42222;
+  outline: 2px solid #c42222;
+}
+
+.button-container {
+  position: absolute;
+  top: -40px;
+  left: 0;
 }
 
 .customer, .report {
@@ -166,4 +213,59 @@ button:hover {
 
 .customer:hover, .report:hover {
   background-color: #e9e9e9;
+}
+
+.toolbar {
+  /* padding: 8px; */
+  margin-top: 16px;
+  margin-bottom: 16px;
+  /* border: 1px solid #e9e9e9;
+  border-radius: 10px; */
+  /* box-shadow: 3px 3px 3px rgba(1, 1, 1, .25); */
+}
+
+svg {
+  width: auto;
+  height: 100%;
+}
+
+.svg-icon {
+  vertical-align: top;
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+}
+
+.svg-symbol {
+  vertical-align: top;
+  display: inline-block;
+  position: absolute;
+  top: 9.5px;
+  left: 7px;
+  width: 18px;
+  height: 18px;
+}
+
+.svg-minus {
+  vertical-align: top;
+  display: inline-block;
+  position: absolute;
+  top: 0px;
+  left: 1px;
+  width: 16px;
+  height: 16px;
+}
+
+.button-text {
+  color: var(--button-font-color);
+  margin-left: 6px;
+  font-weight: bold;
+  vertical-align: top;
+  display: inline-block;
+}
+
+.reports-header {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
 }

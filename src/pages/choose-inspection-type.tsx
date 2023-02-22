@@ -1,4 +1,5 @@
 import React, { Dispatch, FC, SetStateAction, useState } from "react";
+import { NegateButton } from "../components/negate-button";
 // import { InspectionReport } from "./inspection-report";
 import { Customer, InspectionType, Report, ReportTEST } from "../types";
 import { InspectionReportTEST } from "./inspection-report-TEST";
@@ -20,7 +21,9 @@ export const ChooseInspectionType: FC<P_ChooseInspectionType> = ({ customer, set
 
   return (
     <>
-      <button type="button" onClick={ () => setEditingReport(false) }>Cancel</button>
+      <div className="toolbar">
+        <NegateButton onClick={ () => setEditingReport(false) } text="Cancel" />
+      </div>
 
       <h3>Choose Type:</h3>
       <button type="button" onClick={ () => getInspection(InspectionType.TOWABLE) }>Towable</button>

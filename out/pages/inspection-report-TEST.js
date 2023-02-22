@@ -37,6 +37,10 @@ const react_1 = __importStar(require("react"));
 const types_1 = require("../types");
 const jspdf_1 = require("jspdf");
 const inspection_form_TEST_1 = require("../components/inspection-form-TEST");
+const negate_button_1 = require("../components/negate-button");
+const back_button_1 = require("../components/back-button");
+const save_button_1 = require("../components/save-button");
+const save_as_pdf_button_1 = require("../components/save-as-pdf-button");
 ;
 const InspectionReportTEST = ({ report, setReport, setEditingReport }) => {
     const [state, setState] = (0, react_1.useState)(report.form);
@@ -119,17 +123,18 @@ const InspectionReportTEST = ({ report, setReport, setEditingReport }) => {
         ? "Motorhome Inspection Report"
         : "Towable RV Inspection Report";
     const createCustomerInfoSection = (customer) => (react_1.default.createElement("section", null,
-        react_1.default.createElement("h3", null, "Customer Info"),
         react_1.default.createElement("hr", null),
+        react_1.default.createElement("h3", null, "Customer Info"),
         react_1.default.createElement("div", null, `${customer.firstName}${customer.lastName ? ` ${customer.lastName}` : ""}`),
         customer.phone !== "" && react_1.default.createElement("div", null, customer.phone),
         customer.email !== "" && react_1.default.createElement("div", null, customer.email),
         customer.address !== "" && react_1.default.createElement("div", null, customer.address)));
     return (react_1.default.createElement("div", null,
-        react_1.default.createElement("button", { type: "button", onClick: () => setReport(null) }, "Back"),
-        react_1.default.createElement("button", { type: "button", onClick: () => saveForm() }, "Save"),
-        report.customer && react_1.default.createElement("button", { type: "button", onClick: () => deleteReport() }, "Delete"),
-        report.customer && react_1.default.createElement("button", { type: "button", onClick: () => saveAsPDF() }, "Save as PDF"),
+        react_1.default.createElement("div", { className: "toolbar" },
+            react_1.default.createElement(back_button_1.BackButton, { onClick: () => setReport(null) }),
+            react_1.default.createElement(save_button_1.SaveButton, { onClick: () => saveForm() }),
+            report.customer && react_1.default.createElement(save_as_pdf_button_1.SaveAsPDFButton, { onClick: () => saveAsPDF() }),
+            report.customer && react_1.default.createElement(negate_button_1.NegateButton, { onClick: () => deleteReport(), text: "Delete" })),
         react_1.default.createElement("div", { className: "printable-form" },
             react_1.default.createElement("div", { className: "report-header" },
                 report.customer && (react_1.default.createElement(react_1.default.Fragment, null,
@@ -137,11 +142,11 @@ const InspectionReportTEST = ({ report, setReport, setEditingReport }) => {
                     react_1.default.createElement("h3", null, reportTitle),
                     createCustomerInfoSection(report.customer),
                     react_1.default.createElement("section", null,
-                        react_1.default.createElement("h3", null, "Rv Info"),
                         react_1.default.createElement("hr", null),
+                        react_1.default.createElement("h3", null, "Rv Info"),
                         react_1.default.createElement("input", { type: "text", value: RVInfo, onChange: (e) => setRVInfo(e.target.value) })))),
-                react_1.default.createElement("h3", null, "Report"),
-                react_1.default.createElement("hr", null)),
+                react_1.default.createElement("hr", null),
+                react_1.default.createElement("h3", null, "Report")),
             react_1.default.createElement(inspection_form_TEST_1.InspectionFormTEST, Object.assign({}, { state, setState, isTemplate: !report.customer })))));
 };
 exports.InspectionReportTEST = InspectionReportTEST;
