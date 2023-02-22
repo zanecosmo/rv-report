@@ -35,10 +35,10 @@ export const InspectionReportTEST: FC<P_InspectionReport> = ({ report, setReport
   };
 
   const saveAsPDF = async () => {
-    const report = document.querySelector(".printable-form")!as HTMLElement;
+    const reportElement = document.querySelector(".printable-form")!as HTMLElement;
 
-    const header = report.querySelector(".report-header")! as HTMLElement; // everythng except the form
-    const table = report.querySelector("table")! as HTMLElement;
+    const header = reportElement.querySelector(".report-header")! as HTMLElement; // everythng except the form
+    const table = reportElement.querySelector("table")! as HTMLElement;
     const tableRows = table.querySelectorAll("tr");
 
     const jspdf = new jsPDF({
@@ -98,7 +98,9 @@ export const InspectionReportTEST: FC<P_InspectionReport> = ({ report, setReport
       };
     };
 
-    pdf.save("multi-page.pdf");
+    const filename = `${report.dateCreated} ${report.customer?.firstName} ${report.customer?.lastName}`
+
+    pdf.save(`${filename}.pdf`);
   };
   
   const deleteReport = async () => {
@@ -147,7 +149,7 @@ export const InspectionReportTEST: FC<P_InspectionReport> = ({ report, setReport
               <section>
                 <hr></hr>
                 <h3>Rv Info</h3>
-                <input
+                <input className="rv-info"
                   type="text"
                   value={ RVInfo }
                   onChange={ (e: ChangeEvent<HTMLInputElement>) => setRVInfo(e.target.value) }

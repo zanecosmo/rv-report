@@ -16,6 +16,10 @@ const path_1 = __importDefault(require("path"));
 const electron_1 = require("electron");
 const uuid_1 = require("uuid");
 const utils_1 = require("../utils/back-end/utils");
+const getCurrentDate = () => {
+    const date = new Date();
+    return `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}`;
+};
 const createWindow = () => {
     const preloadPath = (0, utils_1.isDev)()
         ? path_1.default.resolve(__dirname, "./preload.js")
@@ -62,7 +66,7 @@ const createWindow = () => {
             id: customer ? (0, uuid_1.v4)() : null,
             customer: customer,
             RVInfo: "",
-            dateCreated: customer ? new Date() : null,
+            dateCreated: customer ? getCurrentDate() : null,
             form: form
         };
         return report;

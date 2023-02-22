@@ -269,3 +269,15 @@ svg {
   flex-flow: row nowrap;
   justify-content: space-between;
 }
+
+.rv-info {
+  padding: 8px 8px 8px 0px;
+  border: none;
+  font-size: 1em;
+}
+
+.rv-info:focus {
+  border: 1px solid var(--font-color);
+
+  padding-left: 8px;
+}

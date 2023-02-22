@@ -62,9 +62,10 @@ const InspectionReportTEST = ({ report, setReport, setEditingReport }) => {
         }
     });
     const saveAsPDF = () => __awaiter(void 0, void 0, void 0, function* () {
-        const report = document.querySelector(".printable-form");
-        const header = report.querySelector(".report-header"); // everythng except the form
-        const table = report.querySelector("table");
+        var _a, _b;
+        const reportElement = document.querySelector(".printable-form");
+        const header = reportElement.querySelector(".report-header"); // everythng except the form
+        const table = reportElement.querySelector("table");
         const tableRows = table.querySelectorAll("tr");
         const jspdf = new jspdf_1.jsPDF({
             unit: "px",
@@ -113,7 +114,8 @@ const InspectionReportTEST = ({ report, setReport, setEditingReport }) => {
             ;
         }
         ;
-        pdf.save("multi-page.pdf");
+        const filename = `${report.dateCreated} ${(_a = report.customer) === null || _a === void 0 ? void 0 : _a.firstName} ${(_b = report.customer) === null || _b === void 0 ? void 0 : _b.lastName}`;
+        pdf.save(`${filename}.pdf`);
     });
     const deleteReport = () => __awaiter(void 0, void 0, void 0, function* () {
         yield window.electronAPI.deleteReport(report.id);
@@ -144,7 +146,7 @@ const InspectionReportTEST = ({ report, setReport, setEditingReport }) => {
                     react_1.default.createElement("section", null,
                         react_1.default.createElement("hr", null),
                         react_1.default.createElement("h3", null, "Rv Info"),
-                        react_1.default.createElement("input", { type: "text", value: RVInfo, onChange: (e) => setRVInfo(e.target.value) })))),
+                        react_1.default.createElement("input", { className: "rv-info", type: "text", value: RVInfo, onChange: (e) => setRVInfo(e.target.value) })))),
                 react_1.default.createElement("hr", null),
                 react_1.default.createElement("h3", null, "Report")),
             react_1.default.createElement(inspection_form_TEST_1.InspectionFormTEST, Object.assign({}, { state, setState, isTemplate: !report.customer })))));

@@ -46,7 +46,7 @@ export interface ReportTEST {
   id: string | null,
   RVInfo: string,
   customer: Customer | null,
-  dateCreated: Date | null,
+  dateCreated: string | null,
   form: FormTEST
 };
 

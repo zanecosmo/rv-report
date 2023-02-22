@@ -4,6 +4,11 @@ import { app, BrowserWindow, ipcMain, IpcMainInvokeEvent } from "electron";
 import { v4 as uuidv4 } from 'uuid';
 import { database, isDev } from "../utils/back-end/utils";
 
+const getCurrentDate = () => {
+  const date = new Date();
+  return `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}`;
+};
+
 const createWindow = () => {
   const preloadPath = isDev()
     ? path.resolve(__dirname, "./preload.js")
@@ -53,7 +58,7 @@ const createWindow = () => {
       id: customer ? uuidv4() : null,
       customer: customer,
       RVInfo: "",
-      dateCreated: customer ? new Date() : null,
+      dateCreated: customer ? getCurrentDate() : null,
       form: form
     };
 
