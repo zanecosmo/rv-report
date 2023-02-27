@@ -37,7 +37,7 @@ const react_1 = __importStar(require("react"));
 const negate_button_1 = require("../components/negate-button");
 // import { InspectionReport } from "./inspection-report";
 const types_1 = require("../types");
-const inspection_report_TEST_1 = require("./inspection-report-TEST");
+const inspection_report_1 = require("./inspection-report");
 ;
 const ChooseInspectionType = ({ customer, setEditingReport }) => {
     const [report, setReport] = (0, react_1.useState)(null);
@@ -46,7 +46,7 @@ const ChooseInspectionType = ({ customer, setEditingReport }) => {
         setReport(report);
     });
     if (report)
-        return react_1.default.createElement(inspection_report_TEST_1.InspectionReportTEST, Object.assign({}, { report, setReport, setEditingReport }));
+        return react_1.default.createElement(inspection_report_1.InspectionReport, Object.assign({}, { report, setReport, setEditingReport }));
     return (react_1.default.createElement(react_1.default.Fragment, null,
         react_1.default.createElement("div", { className: "toolbar" },
             react_1.default.createElement(negate_button_1.NegateButton, { onClick: () => setEditingReport(false), text: "Cancel" })),

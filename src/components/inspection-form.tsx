@@ -1,147 +1,56 @@
-import React, { ChangeEvent, Dispatch, FC, SetStateAction } from "react";
+import React, { Dispatch, FC, SetStateAction } from "react";
+import { Form } from "../types";
 import { ContentEditableDiv } from "./content-editable-div";
-import { FlattenedState } from "../types";
+import { CheckBox } from "./checkbox";
+import { XButton } from "./x-button";
+import { AddButton } from "./add-button";
+import { MinusButton } from "./minus-button";
 
 export interface P_InspectionForm {
-  state: FlattenedState,
-  setState: Dispatch<SetStateAction<FlattenedState>>
+  state: Form,
+  setState: Dispatch<SetStateAction<Form>>,
+  isTemplate: boolean,
+  editable: boolean,
 };
 
-interface CategoryKeys {
-  categoryName: string,
-  rows: string[],
-  notes: string,
-};
+export const InspectionForm: FC<P_InspectionForm> = (props): JSX.Element => {
+  const { state, setState, isTemplate, editable } = props;
 
-export const InspectionForm: FC<P_InspectionForm> = ({ state, setState }): JSX.Element => {
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.type === "checkbox" ? e.target.checked : e.target.value; 
-    setState({ ...state, [e.target.name]: value });
-  };
+  const addCategory = (categoryIndex: number) => {
+    const newCategories = state.categories.map(c => c);
 
-  const keys: string[] = Object.keys(state);
-
-  const splitIntoCategories = (): string[][] => {
-    const categories: string[][] = [];
-    let category: string[] = [];
-    let index = 0;
-  
-    keys.forEach(key => {
-      const substrings = key.split(".");
-      if (parseInt(substrings[0]) === index) category.push(key);
-      else {
-        categories.push(category);
-        index++;
-        category = [ key ];
-      };
+    newCategories.splice(categoryIndex, 0, {
+      categoryName: "New Category",
+      rows: [],
+      notes: ""
     });
-  
-    categories.push(category);
-    return categories;
+
+    setState({ ...state, categories: newCategories });
   };
 
-  const categories: string[][] = splitIntoCategories();
-  
-  const divideCategory = (category: string[]): CategoryKeys => ({
-    categoryName: category.shift()!,
-    notes: category.pop()!,
-    rows: category
-  });
+  const addLineItem = (categoryIndex: number) =>  {
+    const newCategories = state.categories.map(c => c);
 
-  const generateCategory = (categoryKeys: CategoryKeys) => (
-    <tbody key={ `${categoryKeys.categoryName}.key` }>
-      <tr>
-        <td className="spacer" colSpan={ 4 }> </td>
-      </tr>
-  
-      <tr>
-        <th className="line-item-notes" colSpan={ 4 }>
-          <ContentEditableDiv state={ state } setState={ setState } stateKey={ categoryKeys.categoryName } />
-        </th>
-      </tr>
-  
-      { generateRows(categoryKeys) }
-  
-      <tr>
-        <td className="line-item-notes" colSpan={ 4 }>
-          {/* <div className="textarea-div" contentEditable="true">{row.notes}</div> */}
-          <span>Notes:</span>
-          <ContentEditableDiv state={ state } setState={ setState } stateKey={ categoryKeys.notes } />
-        </td>
-      </tr>
-    </tbody>
-  );
+    newCategories[categoryIndex].rows.push({
+      lineItem: "",
+      pass: false,
+      fail: false,
+      notes: ""
+    });
 
-  const generateRows = (categoryKeys: CategoryKeys) => {
-    const rows: JSX.Element[] = [];
-  
-    for (let i = 0; i < categoryKeys.rows.length; i+= 4) {
-      const lineItem = categoryKeys.rows[i];
-      const pass = categoryKeys.rows[i + 1];
-      const fail = categoryKeys.rows[i + 2];
-      const notes = categoryKeys.rows[i + 3];
-  
-      const row = createRow(
-        i,
-        lineItem,
-        pass,
-        fail,
-        notes
-      );
-  
-      rows.push(row)
-    };
-  
-    return rows;
+    setState({ ...state, categories: newCategories });
   };
 
-  const createRow = (
-    key: number,
-    lineItem: string,
-    pass: string,
-    fail: string,
-    notes: string
-  ) => (
-    <tr key={key}>
-      <td className="line-item-notes">
-        <ContentEditableDiv state={ state } setState={ setState } stateKey={ lineItem } />
-      </td>
-  
-      <td className="pass-fail">
-        <label className="checkbox">
-          <input
-            key={ pass }
-            type="checkbox"
-            name={ pass }
-            checked={ state[pass] as boolean }
-            onChange={ handleInputChange }
-          />
-          <span className="overlay">
-            <div className="icon-container"><div className="icon"></div></div>
-          </span>
-        </label>
-      </td>
-  
-      <td className="pass-fail">
-        <label className="checkbox">
-          <input
-            key={ fail }
-            type="checkbox"
-            name={ fail }
-            checked={ state[fail] as boolean }
-            onChange={ handleInputChange }
-          />
-          <span className="overlay">
-            <div className="icon-container"><div className="icon"></div></div>
-          </span>
-        </label>
-      </td>
-  
-      <td className="line-item-notes">
-        <ContentEditableDiv state={ state } setState={ setState } stateKey={ notes } />
-      </td>
-    </tr>
-  );
+  const deleteCategory = (categoryIndex: number) => {
+    const newCategories = state.categories.filter((_c, i) => i !== categoryIndex);
+    setState({ ...state, categories: newCategories });
+  };
+
+  const deleteLineItem = (categoryIndex: number, rowIndex: number) => {
+    const newCategories = state.categories.map(c => c);
+    newCategories[categoryIndex].rows = newCategories[categoryIndex].rows.filter((_r, i) => i !== rowIndex);
+    setState({ ...state, categories: newCategories })
+  };
 
   return (
     <table>
@@ -149,15 +58,130 @@ export const InspectionForm: FC<P_InspectionForm> = ({ state, setState }): JSX.E
       <thead>
         <tr>
           <th>List Item</th>
-          <th>Passed</th>
-          <th>Failed</th>
+          <th>Pass</th>
+          <th>Fail</th>
           <th>Notes</th>
         </tr>
       </thead>
 
-      { categories.map((category: string[]) => {
-        const categoryKeys: CategoryKeys = divideCategory(category);
-        return generateCategory(categoryKeys);
+      { state.categories.map((category, categoryIndex) => {
+        return (
+          <tbody key={ `category.${categoryIndex.toString()}.key` }>
+
+            <tr>
+              <td className="spacer" colSpan={ 4 }> </td>
+            </tr>
+
+            { isTemplate && (
+              <>
+                <tr>
+                  <td className="spacer" colSpan={ 4 }> </td>
+                </tr>
+                <tr>
+                  <td className="spacer" colSpan={ 4 }> </td>
+                </tr>
+                <tr>
+                  <td colSpan={ 4 }>
+                    <AddButton onClick={ () => addCategory(categoryIndex) } text="New Category" />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="spacer" colSpan={ 4 }> </td>
+                </tr>
+                <tr>
+                  <td className="spacer" colSpan={ 4 }> </td>
+                </tr>
+              </>
+            ) }
+        
+            { isTemplate && (
+              <>
+                <tr>
+                  <td className="spacer" colSpan={ 4 }> </td>
+                </tr>
+                <tr>
+                  <td className="spacer">
+                    <XButton onClick={ () => deleteCategory(categoryIndex) } />
+                  </td>
+                </tr>
+              </>
+              ) }
+
+            <tr>
+              <th className="line-item-notes" colSpan={ 4 }>
+                <ContentEditableDiv { ...{
+                  state,
+                  setState,
+                  payload: [ categoryIndex, null, "categoryName" ],
+                  isEditable: isTemplate
+                } } />
+              </th>
+            </tr>
+        
+            { category.rows.map((_row, rowIndex) => (
+              <tr key={ `row.${rowIndex}.key` }>
+                <td className="line-item-notes">
+                  <ContentEditableDiv { ...{
+                    state,
+                    setState,
+                    payload: [ categoryIndex, rowIndex, "lineItem" ],
+                    isEditable: isTemplate
+                  } } />
+                </td>
+            
+                <td className="pass-fail">
+                  <CheckBox { ...{
+                    state,
+                    setState,
+                    payload: [ categoryIndex, rowIndex, "pass" ],
+                    editable: isTemplate || editable
+                  } } />
+                </td>
+            
+                <td className="pass-fail">
+                  <CheckBox { ...{
+                    state,
+                    setState,
+                    payload: [ categoryIndex, rowIndex, "fail" ],
+                    editable: isTemplate || editable
+                  } } />
+                </td>
+            
+                <td className="line-item-notes">
+                  <ContentEditableDiv { ...{
+                    state,
+                    setState,
+                    payload: [ categoryIndex, rowIndex, "notes" ],
+                    isEditable: isTemplate || editable
+                  } } />
+                  { isTemplate && (
+                    <MinusButton onClick={ () => deleteLineItem(categoryIndex, rowIndex) } />
+                  ) }
+                </td>
+              </tr>
+          )) }
+
+          { isTemplate && (
+            <tr>
+              <td colSpan={ 4 }>
+                <AddButton onClick={ () => addLineItem(categoryIndex) } text="Add Line Item" />
+              </td>
+            </tr>
+          ) }
+      
+          <tr>
+            <td className="line-item-notes" colSpan={ 4 }>
+              <span>Notes:</span>
+              <ContentEditableDiv { ...{
+                state,
+                setState,
+                payload: [ categoryIndex, null, "notes" ],
+                isEditable: isTemplate || editable
+              }} />
+            </td>
+          </tr>
+        </tbody>
+        )
       }) }
 
     </table>

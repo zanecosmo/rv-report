@@ -1,8 +1,8 @@
 import React, { ChangeEvent, Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { ChooseInspectionType } from "./choose-inspection-type";
 // import { InspectionReport } from "./inspection-report";
-import { Customer, Report, ReportTEST } from "../types";
-import { InspectionReportTEST } from "./inspection-report-TEST";
+import { Customer, Report } from "../types";
+import { InspectionReport } from "./inspection-report";
 import { BackButton } from "../components/back-button";
 import { EditButton } from "../components/edit-button";
 import { NegateButton } from "../components/negate-button";
@@ -17,8 +17,8 @@ export interface P_Customer {
 export const CustomerView: FC<P_Customer> = ({ customer, setCustomer }): JSX.Element => {
   const [ isEditing, setIsEditing ] = useState(customer.id === "" ? true : false);
   const [ addingReport, setAddingReport ] = useState(false);
-  const [ reports, setReports ] = useState<ReportTEST[]>([]);
-  const [ report, setReport ] = useState<ReportTEST | null>(null);
+  const [ reports, setReports ] = useState<Report[]>([]);
+  const [ report, setReport ] = useState<Report | null>(null);
 
   const getReportList = async (id: string) => setReports(await window.electronAPI.getReportList(id));
 
@@ -42,7 +42,7 @@ export const CustomerView: FC<P_Customer> = ({ customer, setCustomer }): JSX.Ele
     setCustomer(null);
   };
 
-  if (report) return <InspectionReportTEST { ...{ report, setReport, setEditingReport: setAddingReport } } />
+  if (report) return <InspectionReport { ...{ report, setReport, setEditingReport: setAddingReport } } />
   else if (addingReport) return (<ChooseInspectionType  {...{ customer, setEditingReport: setAddingReport } }  />)
   return (
     <>

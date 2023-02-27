@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.InspectionReportTEST = void 0;
+exports.InspectionReport = void 0;
 const react_1 = __importStar(require("react"));
 const types_1 = require("../types");
 const jspdf_1 = require("jspdf");
@@ -43,7 +43,7 @@ const save_button_1 = require("../components/save-button");
 const save_as_pdf_button_1 = require("../components/save-as-pdf-button");
 const edit_button_1 = require("../components/edit-button");
 ;
-const InspectionReportTEST = ({ report, setReport, setEditingReport }) => {
+const InspectionReport = ({ report, setReport, setEditingReport }) => {
     const [state, setState] = (0, react_1.useState)(report.form);
     const [RVInfo, setRVInfo] = (0, react_1.useState)(report.RVInfo);
     const [isEditing, setIsEditing] = (0, react_1.useState)(false);
@@ -52,12 +52,9 @@ const InspectionReportTEST = ({ report, setReport, setEditingReport }) => {
             report.RVInfo = RVInfo;
             yield window.electronAPI.saveReport(report);
             setIsEditing(false);
-            // setReport(null);
         }
         else {
-            console.log("SAVE TEMPLATE PRESSED");
             report.form = state;
-            console.log(report.form.categories);
             yield window.electronAPI.saveReport(report);
             setEditingReport(false);
             setReport(null);
@@ -133,7 +130,6 @@ const InspectionReportTEST = ({ report, setReport, setEditingReport }) => {
         customer.phone !== "" && react_1.default.createElement("div", null, customer.phone),
         customer.email !== "" && react_1.default.createElement("div", null, customer.email),
         customer.address !== "" && react_1.default.createElement("div", null, customer.address)));
-    console.log(isEditing);
     return (react_1.default.createElement("div", null,
         react_1.default.createElement("div", { className: "toolbar" }, !report.customer
             ? (react_1.default.createElement(react_1.default.Fragment, null,
@@ -158,10 +154,10 @@ const InspectionReportTEST = ({ report, setReport, setEditingReport }) => {
                         react_1.default.createElement("section", null,
                             react_1.default.createElement("hr", null),
                             react_1.default.createElement("h3", null, "Rv Info"),
-                            react_1.default.createElement("input", { className: "rv-info", type: "text", value: RVInfo, onChange: (e) => setRVInfo(e.target.value) }))))
+                            react_1.default.createElement("input", { className: "rv-info", type: "text", value: RVInfo, readOnly: !isEditing, onChange: (e) => setRVInfo(e.target.value) }))))
                     : (react_1.default.createElement(react_1.default.Fragment, null, reportTitle)),
                 react_1.default.createElement("hr", null),
                 react_1.default.createElement("h3", null, "Report")),
             react_1.default.createElement(inspection_form_TEST_1.InspectionFormTEST, Object.assign({}, { state, setState, isTemplate: !report.customer, editable: isEditing })))));
 };
-exports.InspectionReportTEST = InspectionReportTEST;
+exports.InspectionReport = InspectionReport;

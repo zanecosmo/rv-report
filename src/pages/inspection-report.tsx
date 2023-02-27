@@ -1,158 +1,193 @@
-// import React, { ChangeEvent, Dispatch, FC, SetStateAction, useState } from "react";
-// import { InspectionForm } from "../components/inspection-form";
-// import { Category, Customer, InspectionType, Report } from "../types";
-// import { flatten, unflatten } from "../utils/front-end/utils";
-// import {jsPDF } from "jspdf";
+import React, { ChangeEvent, Dispatch, FC, SetStateAction, useState } from "react";
+import { Customer, Form, InspectionType, Report } from "../types";
+import {jsPDF } from "jspdf";
+import { InspectionForm } from "../components/inspection-form";
+import { NegateButton } from "../components/negate-button";
+import { BackButton } from "../components/back-button";
+import { SaveButton } from "../components/save-button";
+import { SaveAsPDFButton } from "../components/save-as-pdf-button";
+import { EditButton } from "../components/edit-button";
 
+export interface P_InspectionReport {
+  report: Report,
+  setReport: Dispatch<SetStateAction<Report | null>>,
+  setEditingReport: Dispatch<SetStateAction<boolean>>
+};
 
-// export interface P_InspectionReport {
-//   report: Report,
-//   setReport: Dispatch<SetStateAction<Report | null>>,
-//   setAddingReport: Dispatch<SetStateAction<boolean>>
-// };
+export const InspectionReport: FC<P_InspectionReport> = ({ report, setReport, setEditingReport }): JSX.Element => {
+  const [ state, setState ] = useState<Form>(report.form);
+  const [ RVInfo, setRVInfo ] = useState(report.RVInfo);
+  const [ isEditing, setIsEditing ] = useState(false);
 
-// export const InspectionReport: FC<P_InspectionReport> = ({ report, setReport, setAddingReport }): JSX.Element => {
-//   const flattenedState = flatten(report.form.categories);
-//   const [ state, setState ] = useState(flattenedState);
-//   const [ RVInfo, setRVInfo ] = useState(report.RVInfo);
+  const saveForm = async () => {
+    if (report.customer) {
+      report.RVInfo = RVInfo;
+      await window.electronAPI.saveReport(report);
+      setIsEditing(false);
+    }
+    else {
+      report.form = state;
+      await window.electronAPI.saveReport(report);
+      setEditingReport(false);
+      setReport(null);
+    }
+  };
 
-//   const saveForm = async () => {
-//     report.form.categories = unflatten(state) as Category[];
-//     report.RVInfo = RVInfo;
-//     await window.electronAPI.saveReport(report);
-//     setAddingReport(false);
-//     setReport(null);
-//   };
+  const saveAsPDF = async () => {
+    const reportElement = document.querySelector(".printable-form")!as HTMLElement;
 
-//   const saveAsPDF = async () => {
-//     const report = document.querySelector(".printable-form")!as HTMLElement;
+    const header = reportElement.querySelector(".report-header")! as HTMLElement; // everythng except the form
+    const table = reportElement.querySelector("table")! as HTMLElement;
+    const tableRows = table.querySelectorAll("tr");
 
-//     const header = report.querySelector(".report-header")! as HTMLElement; // everythng except the form
-//     const table = report.querySelector("table")! as HTMLElement;
-//     const tableRows = table.querySelectorAll("tr");
+    const jspdf = new jsPDF({
+      unit: "px",
+      format: "letter",
+      hotfixes: ["px_scaling"]
+    });
 
-//     const jspdf = new jsPDF({
-//       unit: "px",
-//       format: "letter",
-//       hotfixes: ["px_scaling"]
-//     });
+    const margin = 16;
+    const pageHeight = jspdf.internal.pageSize.getHeight() - (margin * 2);
 
-//     const margin = 16;
-//     const pageHeight = jspdf.internal.pageSize.getHeight() - (margin * 2);
-
-//     let pdf: jsPDF = jspdf;
+    let pdf: jsPDF = jspdf;
     
-//     let page: HTMLElement = document.createElement("div");
-//     let newTable: HTMLElement = document.createElement("table");
-//     let tbody = document.createElement("tbody");
+    let page: HTMLElement = document.createElement("div");
+    let newTable: HTMLElement = document.createElement("table");
+    let tbody = document.createElement("tbody");
 
-//     page.appendChild(header.cloneNode(true));
+    page.appendChild(header.cloneNode(true));
 
-//     let currentHeight = header.offsetHeight;
-//     let numberOfPages = 0;
+    let currentHeight = header.offsetHeight;
+    let numberOfPages = 0;
 
-//     for (let i = 0; i < tableRows.length; i++) {
-//       const row = tableRows[i];
-//       const height = row.offsetHeight;
+    for (let i = 0; i < tableRows.length; i++) {
+      const row = tableRows[i];
+      const height = row.offsetHeight;
       
-//       if (i === tableRows.length - 1) {
-//         tbody.appendChild(row.cloneNode(true));
-//       };
+      if (i === tableRows.length - 1) {
+        tbody.appendChild(row.cloneNode(true));
+      };
 
-//       if (pageHeight < currentHeight + height || i === tableRows.length - 1) {
-//         newTable.appendChild(tbody);
-//         page.appendChild(newTable);
+      if (pageHeight < currentHeight + height || i === tableRows.length - 1) {
+        newTable.appendChild(tbody);
+        page.appendChild(newTable);
 
-//         await pdf.html(page, {
-//           callback: (doc: jsPDF) => {
-//             pdf = doc;
-//           },
-//           y: pageHeight * numberOfPages,
-//           margin: [margin, margin, margin, margin],
-//           width: 800 - margin,
-//           windowWidth: 800
-//         });
+        await pdf.html(page, {
+          callback: (doc: jsPDF) => {
+            pdf = doc;
+          },
+          y: pageHeight * numberOfPages,
+          margin: [margin, margin, margin, margin],
+          width: 800 - margin,
+          windowWidth: 800
+        });
 
-//         currentHeight = height;
-//         numberOfPages++;
+        currentHeight = height;
+        numberOfPages++;
 
-//         page = document.createElement("div");
-//         newTable = document.createElement("table");
-//         tbody = document.createElement("tbody");
+        page = document.createElement("div");
+        newTable = document.createElement("table");
+        tbody = document.createElement("tbody");
 
-//         tbody.appendChild(row.cloneNode(true));
-//       }
-//       else {
-//         tbody.appendChild(row.cloneNode(true));
-//         currentHeight+= height;
-//       };
-//     };
+        tbody.appendChild(row.cloneNode(true));
+      }
+      else {
+        tbody.appendChild(row.cloneNode(true));
+        currentHeight+= height;
+      };
+    };
 
-//     pdf.save("multi-page.pdf");
-//   };
+    const filename = `${report.dateCreated} ${report.customer?.firstName} ${report.customer?.lastName}`
+
+    pdf.save(`${filename}.pdf`);
+  };
   
-//   const deleteReport = async () => {
-//     await window.electronAPI.deleteReport(report.id!);
-//     setReport(null);
-//   };
+  const deleteReport = async () => {
+    await window.electronAPI.deleteReport(report.id!);
+    setReport(null);
+  };
 
-//   const reportTitle = report.form.type === InspectionType.MOTORHOME
-//     ? "Motorhome Inspection Report"
-//     : "Towable RV Inspection Report";
+  const reportTitle = report.form.type === InspectionType.MOTORHOME
+    ? "Motorhome Inspection Report"
+    : "Towable RV Inspection Report";
 
-//   const createCustomerInfoSection = (customer: Customer) => (
-//     <section>
-//       <h3>Customer Info</h3>
-//       <hr></hr>
+  const createCustomerInfoSection = (customer: Customer) => (
+    <section>
+      <hr></hr>
+      <h3>Customer Info</h3>
 
-//       <div>{ `${customer.firstName}${customer.lastName ? ` ${customer.lastName}` : ""}` }</div>
-//       {customer.phone !== "" && <div>{ customer.phone }</div>}
-//       {customer.email !== "" && <div>{ customer.email }</div>}
-//       {customer.address !== "" && <div>{ customer.address }</div>}
+      <div>{ `${customer.firstName}${customer.lastName ? ` ${customer.lastName}` : ""}` }</div>
+      {customer.phone !== "" && <div>{ customer.phone }</div>}
+      {customer.email !== "" && <div>{ customer.email }</div>}
+      {customer.address !== "" && <div>{ customer.address }</div>}
 
-//     </section>
-//   );
-  
-//   return (
-//     <div>
+    </section>
+  );
 
-//       <button type="button" onClick={ () => setReport(null) }>Back</button>
-//       <button type="button" onClick={ () => saveForm() }>Save</button>
-//       {report.customer && <button type="button" onClick={ () => deleteReport() }>Delete</button>}
-//       {report.customer && <button type="button" onClick={ () => saveAsPDF() }>Save as PDF</button>}
+  return (
+    <div>
 
-//       <div className="printable-form">
+      <div className="toolbar">
+        { !report.customer
+          ? (<>
+              <NegateButton onClick={ () => setEditingReport(false) } text="Cancel" />
+              <SaveButton onClick={ () => saveForm() } />
+            </>)
+          : (<>
+              { isEditing
+                ? (
+                    <>
+                      <SaveButton onClick={ () => saveForm() } />
+                      <NegateButton onClick={ () => setIsEditing(false) } text="Cancel" />
+                    </>
+                  ) 
+                : (
+                    <>
+                      <BackButton onClick={ () => setReport(null) } />
+                      <EditButton onClick={ () => setIsEditing(true) } text="Edit Report" />
+                      <SaveAsPDFButton onClick={ () => saveAsPDF() } />
+                      <NegateButton onClick={ () => deleteReport() } text="Delete" />
+                    </>      
+                  )
+              }
+            </>)
+        }
+      </div>
 
-//         <div className="report-header">
+      <div className="printable-form">
 
-//           {report.customer && (
-//             <>
-//               <h1>On The Spot Mobile RV and Trailer Service</h1>
-//               <h3>{ reportTitle }</h3>
+        <div className="report-header">
 
-//               { createCustomerInfoSection(report.customer) }
+          { report.customer
+            ? (<>
+                <h1>On The Spot Mobile RV and Trailer Service</h1>
+                <h3>{ reportTitle }</h3>
 
-//               <section>
-//                 <h3>Rv Info</h3>
-//                 <hr></hr>
-//                 <input
-//                   type="text"
-//                   value={ RVInfo }
-//                   onChange={ (e: ChangeEvent<HTMLInputElement>) => setRVInfo(e.target.value) }
-//                 />
-//               </section>
-//             </>
-//           )}
+                { createCustomerInfoSection(report.customer) }
 
-//           <h3>Report</h3>
-//           <hr></hr>
+                <section>
+                  <hr></hr>
+                  <h3>Rv Info</h3>
+                    <input className="rv-info"
+                    type="text"
+                    value={ RVInfo }
+                    readOnly={ !isEditing }
+                    onChange={ (e: ChangeEvent<HTMLInputElement>) => setRVInfo(e.target.value) }
+                  />
+                </section>
+              </>)
+            : (<>{ reportTitle }</>)
+          }
 
-//         </div>
+          <hr></hr>
+          <h3>Report</h3>
 
-//         <InspectionForm { ...{ state, setState } } />
+        </div>
 
-//       </div>
+        <InspectionForm { ...{ state, setState, isTemplate: !report.customer, editable: isEditing } } />
 
-//     </div>
-//   );
-// };
+      </div>
+
+    </div>
+  );
+};

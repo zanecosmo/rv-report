@@ -9,45 +9,32 @@ export interface FlattenedState {
 
 export interface NestedObject { [key: string]: any }
 
-export interface Category {
+///////////////////////////
+
+export interface Row extends Record<string, string | boolean> {
+  lineItem: string,
+  pass: boolean,
+  fail: boolean,
+  notes: string
+};
+
+export interface Category extends Record<string, string | Row[]> {
   categoryName: string,
   rows: Row[],
   notes: string
 };
 
-export interface Row {
-  lineItem: string,
-  pass: boolean,
-  fail: boolean,
-  notes: string
-};
-
-///////////////////////////
-
-export interface RowTEST extends Record<string, string | boolean> {
-  lineItem: string,
-  pass: boolean,
-  fail: boolean,
-  notes: string
-};
-
-export interface CategoryTEST extends Record<string, string | RowTEST[]> {
-  categoryName: string,
-  rows: RowTEST[],
-  notes: string
-};
-
-export interface FormTEST {
+export interface Form {
   type: InspectionType,
-  categories: CategoryTEST[]
+  categories: Category[]
 };
 
-export interface ReportTEST {
+export interface Report {
   id: string | null,
   RVInfo: string,
   customer: Customer | null,
   dateCreated: string | null,
-  form: FormTEST
+  form: Form
 };
 
 ///////////////////////////
@@ -55,11 +42,6 @@ export interface ReportTEST {
 export enum InspectionType {
   TOWABLE = "towable",
   MOTORHOME = "motorhome"
-};
-
-export interface Form {
-  type: InspectionType,
-  categories: Category[]
 };
 
 export interface Customer {
@@ -71,23 +53,15 @@ export interface Customer {
   email: string
 };
 
-export interface Report {
-  id: string | null,
-  RVInfo: string,
-  customer: Customer | null,
-  dateCreated: Date | null,
-  form: Form
-};
-
 export type ReactState<T> = [T, React.Dispatch<React.SetStateAction<T>>];
 
 export interface IElectronAPI {
   getCustomerList: () => Customer[],
   saveCustomerInfo: (customer: Customer) => Promise<string | undefined>,
   deleteCustomer: (id: string) => void,
-  generateReport: (customer: Customer | null, type: InspectionType) => Promise<ReportTEST>,
-  getReportList: (id: string) => Promise<ReportTEST[]>,
-  saveReport: (report: ReportTEST) => void,
+  generateReport: (customer: Customer | null, type: InspectionType) => Promise<Report>,
+  getReportList: (id: string) => Promise<Report[]>,
+  saveReport: (report: Report) => void,
   deleteReport: (id: string) => void
 };
 

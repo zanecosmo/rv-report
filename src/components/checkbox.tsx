@@ -1,9 +1,9 @@
 import React, { ChangeEvent, Dispatch, FC, FormEvent, SetStateAction } from "react";
-import { CategoryTEST, FormTEST } from "../types";
+import { Category, Form } from "../types";
 
 interface P_CheckBox {
-  state: FormTEST,
-  setState: Dispatch<SetStateAction<FormTEST>>,
+  state: Form,
+  setState: Dispatch<SetStateAction<Form>>,
   payload: [ number, number, "pass"  | "fail" ];
   editable: boolean
 }; 
@@ -13,7 +13,7 @@ export const CheckBox: FC<P_CheckBox> = ({ state, setState, payload, editable })
 
   const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (!editable) return;
-    const newCategories: CategoryTEST[] = state.categories.map(c => c);
+    const newCategories: Category[] = state.categories.map(c => c);
     newCategories[category].rows[row][data] = e.target.checked;
     setState({ ...state, categories: newCategories});
   };

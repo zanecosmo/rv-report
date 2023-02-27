@@ -6,10 +6,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ContentEditableDiv = void 0;
 const react_1 = __importDefault(require("react"));
 ;
-const ContentEditableDiv = ({ state, setState, stateKey }) => {
+const ContentEditableDiv = (props) => {
+    const { state, setState, payload, isEditable } = props;
+    const [category, row, data] = payload;
     const handleInputChange = (e) => {
-        setState(Object.assign(Object.assign({}, state), { [stateKey]: e.currentTarget.innerHTML }));
+        const newCategories = state.categories.map(c => c);
+        if (row === null)
+            newCategories[category][data] = e.currentTarget.innerHTML;
+        else
+            newCategories[category].rows[row][data] = e.currentTarget.innerHTML;
+        setState(Object.assign(Object.assign({}, state), { categories: newCategories }));
     };
-    return (react_1.default.createElement("div", { contentEditable: true, onBlur: handleInputChange, dangerouslySetInnerHTML: { __html: state[stateKey].toString() }, className: "textarea-div" }));
+    const innerHTML = row === null
+        ? state.categories[category][data]
+        : state.categories[category].rows[row][data];
+    return (react_1.default.createElement("div", { contentEditable: isEditable, onBlur: handleInputChange, dangerouslySetInnerHTML: { __html: innerHTML }, className: "textarea-div" }));
 };
 exports.ContentEditableDiv = ContentEditableDiv;

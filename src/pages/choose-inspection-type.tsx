@@ -1,8 +1,8 @@
 import React, { Dispatch, FC, SetStateAction, useState } from "react";
 import { NegateButton } from "../components/negate-button";
 // import { InspectionReport } from "./inspection-report";
-import { Customer, InspectionType, Report, ReportTEST } from "../types";
-import { InspectionReportTEST } from "./inspection-report-TEST";
+import { Customer, InspectionType, Report } from "../types";
+import { InspectionReport } from "./inspection-report";
 
 interface P_ChooseInspectionType {
   customer: Customer | null,
@@ -10,14 +10,14 @@ interface P_ChooseInspectionType {
 };
 
 export const ChooseInspectionType: FC<P_ChooseInspectionType> = ({ customer, setEditingReport }): JSX.Element => {
-  const [ report, setReport ] = useState<ReportTEST | null>(null);
+  const [ report, setReport ] = useState<Report | null>(null);
 
   const getInspection = async (type: InspectionType) => {
-    const report: ReportTEST = await window.electronAPI.generateReport(customer, type);
+    const report: Report = await window.electronAPI.generateReport(customer, type);
     setReport(report);
   };
 
-  if (report) return <InspectionReportTEST { ...{ report, setReport, setEditingReport } }  />;
+  if (report) return <InspectionReport { ...{ report, setReport, setEditingReport } }  />;
 
   return (
     <>
